@@ -24,7 +24,7 @@
               <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-px">
                 <div class="flex items-center">
                   <label class="inline-flex">
-                    <span class="sr-only">Select all</span>
+                    <span class="sr-only">Seleccionar Todo</span>
                     <input
                       class="form-checkbox"
                       type="checkbox"
@@ -74,13 +74,13 @@
         </table>
       </div>
     </div>
+
   </div>
 </template>
 
 <script>
 import { ref, watch } from "vue";
 import Order from "./OrdersTableItem.vue";
-
 import Image01 from "../../images/icon-01.svg";
 import Image02 from "../../images/icon-02.svg";
 import Image03 from "../../images/icon-03.svg";
@@ -94,6 +94,7 @@ export default {
   setup(props, { emit }) {
     const selectAll = ref(false);
     const selected = ref([]);
+    
 
     const checkAll = () => {
       selected.value = [];

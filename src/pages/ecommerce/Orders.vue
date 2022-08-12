@@ -34,7 +34,7 @@
                 <svg class="w-4 h-4 fill-current opacity-50 shrink-0" viewBox="0 0 16 16">
                   <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
                 </svg>
-                <span class="hidden xs:block ml-2">Nueva Orden</span>
+                <span class="hidden xs:block ml-2" @click.stop="orderModalOpen=true">Nueva Orden</span>
               </button>              
             </div>
 
@@ -52,7 +52,108 @@
       </main>
 
     </div> 
+    
+    <!-- CreateOrders -->
+    <ModalBasic
+      :modalOpen="orderModalOpen"
+      @close-modal="orderModalOpen = false"
+      title="Crear Órden"
+    >
+      <!-- Modal content -->
+      <div class="px-5 pt-4 pb-1">
+        <div class="text-sm">
+          <div class="font-medium text-slate-800 mb-2">
+            Registre los datos de la orden que desee registrar manualmente.
+          </div>
+          <div class="space-y-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            
+           
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1 mt-2" for="name"
+                >Título</label
+              >
+              <input id="name" class="form-input w-full" type="text" />
+            </div>
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="email"
+                >Asunto</label
+              >
+              <input id="email" class="form-input w-full" type="text" />
+            </div>
 
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="phrase"
+                >Nombre Emisor</label
+              >
+              <input id="phrase" class="form-input w-full" type="text" />
+            </div>
+            
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="cellphone"
+                >Correo Emisor</label
+              >
+              <input id="cellphone" class="form-input w-full" type="text" />
+            </div>
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="cellphone"
+                >Celular Emisor</label
+              >
+              <input id="cellphone" class="form-input w-full" type="text" />
+            </div>
+            
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="cellphone"
+                >Mensaje</label
+              >
+              <input id="cellphone" class="form-input w-full" type="text" />
+            </div>
+            
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="cellphone"
+                >Cantidad ($USD)</label
+              >
+              <input id="cellphone" class="form-input w-full" type="text" placeholder="$##.##"/>
+            </div>
+            
+
+            <!-- Select -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="file"
+                >Archivo</label
+              >
+              
+              <input id="file" class="form-input w-full" type="file" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Modal footer -->
+      <div class="px-5 py-4">
+        <div class="flex flex-wrap justify-end space-x-2">
+          <button
+            class="
+              btn-sm
+              border-slate-200
+              hover:border-slate-300
+              text-slate-600
+            "
+            @click.stop="orderModalOpen = false"
+          >
+            Cancelar
+          </button>
+          <button class="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white">
+            Guardar
+          </button>
+        </div>
+      </div>
+    </ModalBasic>
   </div>
 </template>
 
@@ -66,6 +167,9 @@ import FilterButton from '../../components/DropdownFilter.vue'
 import OrdersTable from '../../partials/orders/OrdersTable.vue'
 import PaginationClassic from '../../components/PaginationClassic.vue'
 
+import ModalBasic from "../../components/ModalBasic.vue";
+
+
 export default {
   name: 'Orders',
   components: {
@@ -76,11 +180,14 @@ export default {
     FilterButton,
     OrdersTable,
     PaginationClassic,    
+    ModalBasic
   },
   setup() {
 
     const sidebarOpen = ref(false)
     const selectedItems = ref([])
+    
+    const orderModalOpen = ref(false);
 
     const updateSelectedItems = (selected) => {
       selectedItems.value = selected
@@ -90,6 +197,7 @@ export default {
       sidebarOpen,
       selectedItems,
       updateSelectedItems,
+      orderModalOpen
     }   
   }
 }
