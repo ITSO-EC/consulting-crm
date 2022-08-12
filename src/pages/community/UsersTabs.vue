@@ -30,7 +30,7 @@
                 <svg class="w-4 h-4 fill-current opacity-50 shrink-0" viewBox="0 0 16 16">
                   <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
                 </svg>
-                <span class="hidden xs:block ml-2">Agregar Operador</span>
+                <span class="hidden xs:block ml-2" @click.stop="registerModalOpen = true">Agregar Operador</span>
               </button>
             </div>            
 
@@ -54,7 +54,109 @@
       </main>
 
     </div> 
+    <!-- Create Profile -->
+    <ModalBasic
+      :modalOpen="registerModalOpen"
+      @close-modal="registerModalOpen = false"
+      title="Editar Operador"
+    >
+      <!-- Modal content -->
+      <div class="px-5 pt-4 pb-1">
+        <div class="text-sm">
+          <div class="font-medium text-slate-800 mb-2">
+            Haga click sobre el círculo y elija una foto de perfil.
+          </div>
+          <div class="space-y-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            
+            <div class="flex justify-center sm:col-span-2">
+             
+              <img
+                class="rounded-full cursor-pointer hover:grayscale ease-in-out duration-300 active:grayscale-0"
+                :src="Image01 != null ? Image01 :'../src/images/user-64-01.jpg'"
+                width="64"
+                height="64"
+                :alt="'Foto de perfil'"
+              />
+            </div>
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1 mt-2" for="name"
+                >Nombre y Apellido</label
+              >
+              <input id="name" class="form-input w-full" type="text" />
+            </div>
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="email"
+                >Correo</label
+              >
+              <input id="email" class="form-input w-full" type="text" />
+            </div>
 
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="phrase"
+                >Breve Descripción</label
+              >
+              <input id="phrase" class="form-input w-full" type="text" />
+            </div>
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="cellphone"
+                >Celular</label
+              >
+              <input id="cellphone" class="form-input w-full" type="text" />
+            </div>
+
+           
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="password"
+                >Clave</label
+              >
+              <input id="password" class="form-input w-full" type="password" />
+            </div>
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="password"
+                >Confirmar Clave</label
+              >
+              <input id="password" class="form-input w-full" type="password" />
+            </div>
+             <!-- Select -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="country"
+                >Rol</label
+              >
+              <select id="country" class="form-select">
+                <option>Creador</option>
+                <option>Revisor I</option>
+                <option>Revisor II</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Modal footer -->
+      <div class="px-5 py-4">
+        <div class="flex flex-wrap justify-end space-x-2">
+          <button
+            class="
+              btn-sm
+              border-slate-200
+              hover:border-slate-300
+              text-slate-600
+            "
+            @click.stop="registerModalOpen = false"
+          >
+            Cancelar
+          </button>
+          <button class="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white">
+            Guardar
+          </button>
+        </div>
+      </div>
+    </ModalBasic>
   </div>
 </template>
 
@@ -65,6 +167,7 @@ import Header from '../../partials/Header.vue'
 import SearchForm from '../../components/SearchForm.vue'
 import UsersTabsCard from '../../partials/community/UsersTabsCard.vue'
 import PaginationNumeric from '../../components/PaginationNumeric.vue'
+import ModalBasic from '../../components/ModalBasic.vue'
 
 import Image01 from '../../images/user-64-01.jpg'
 import Image02 from '../../images/user-64-02.jpg'
@@ -87,10 +190,13 @@ export default {
     SearchForm,
     UsersTabsCard,
     PaginationNumeric,
+    ModalBasic
   },
   setup() {
 
     const sidebarOpen = ref(false)
+    const registerModalOpen = ref(false);
+    
 
     const items = ref([
       {
@@ -194,6 +300,7 @@ export default {
     return {
       sidebarOpen,
       items,
+      registerModalOpen
     }  
   }
 }

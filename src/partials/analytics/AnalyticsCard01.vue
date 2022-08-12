@@ -45,7 +45,7 @@
               <div class="text-3xl font-bold text-slate-800 mr-2">2m 56s</div>
               <div class="text-sm font-medium text-amber-500">+7%</div>
             </div>
-            <div class="text-sm text-slate-500">Duración de Visita</div>
+            <div class="text-sm text-slate-500">Duración de Visita Promedio</div>
           </div>
         </div>
       </div>
