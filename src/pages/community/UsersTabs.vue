@@ -87,7 +87,7 @@
             </div>
             <!-- Start -->
             <div>
-              <label class="block text-sm font-medium mb-1" for="email"
+              <label class="block text-sm font-medium mb-1 mt-2" for="email"
                 >Correo</label
               >
               <input id="email" class="form-input w-full" type="text" />

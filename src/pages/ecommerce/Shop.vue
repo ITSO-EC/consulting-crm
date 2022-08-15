@@ -78,25 +78,14 @@
               <h2 class="text-xl leading-snug text-slate-800 font-bold mb-5">Vistas</h2>
               <div class="grid grid-cols-12 gap-6">
                 <ShopCards06 />
+                
+                <ShopCards06 />
+                <ShopCards06 />
               </div>
             </div>
 
 
-            <!-- Cards 5 (Popular Categories) -->
-            <div class="mt-8">
-              <h2 class="text-xl leading-snug text-slate-800 font-bold mb-5">Categorías</h2>
-              <div class="grid grid-cols-12 gap-6">
-                <ShopCards05 />
-              </div>
-            </div>
-            
-            <!-- Cards 3 (Online Events) -->
-            <div class="mt-8">
-              <h2 class="text-xl leading-snug text-slate-800 font-bold mb-5">En vivos - (PLUS DE LEXI)</h2>
-              <div class="grid grid-cols-12 gap-6">
-                <ShopCards03 />
-              </div>
-            </div>
+
 
           </div>
 

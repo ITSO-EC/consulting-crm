@@ -6,6 +6,7 @@ import Orders from './pages/ecommerce/Orders.vue'
 import Invoices from './pages/ecommerce/Invoices.vue'
 import Shop from './pages/ecommerce/Shop.vue'
 import Shop2 from './pages/ecommerce/Shop2.vue'
+import Workspace from './pages/ecommerce/Workspace.vue'
 import Product from './pages/ecommerce/Product.vue'
 import Cart from './pages/ecommerce/Cart.vue'
 import Cart2 from './pages/ecommerce/Cart2.vue'
@@ -81,6 +82,10 @@ const router = createRouter({
     {
       path: '/ecommerce/shop-2',
       component: Shop2
+    },
+    {
+      path: '/ecommerce/workspace',
+      component: Workspace
     },
     {
       path: '/ecommerce/product',
