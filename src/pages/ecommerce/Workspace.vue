@@ -162,7 +162,7 @@
               <label class="block text-sm font-medium mb-1 mt-2" for="ronumber"
                 >Número de R.O.</label
               >
-              <input id="ronumber" class="form-input w-full" type="text" />
+              <input id="ronumber" class="form-input w-full" type="text" v-model="newPost.ro" />
             </div>
 
             <!-- Start -->
@@ -170,28 +170,28 @@
               <label class="block text-sm font-medium mb-1" for="legalnorm"
                 >Norma Legal</label
               >
-              <input id="legalnorm" class="form-input w-full" type="text" />
+              <input id="legalnorm" class="form-input w-full" type="text" v-model="newPost.legal_regulation" />
             </div>
             <!-- Start -->
             <div>
               <label class="block text-sm font-medium mb-1" for="normnum"
                 >Número de norma</label
               >
-              <input id="normnum" class="form-input w-full" type="text" />
+              <input id="normnum" class="form-input w-full" type="text" v-model="newPost.number" />
             </div>
             <!-- Start -->
             <div>
               <label class="block text-sm font-medium mb-1" for="reformtype"
                 >Tipo de Reforma</label
               >
-              <input id="reformtype" class="form-input w-full" type="text" />
+              <input id="reformtype" class="form-input w-full" type="text" v-model="newPost.type_reform"/>
             </div>
             <!-- Start -->
             <div>
               <label class="block text-sm font-medium mb-1" for="description"
                 >Descripción</label
               >
-              <input id="description" class="form-input w-full" type="text" />
+              <input id="description" class="form-input w-full" type="text" v-model="newPost.content"/>
             </div>
             <!-- Start -->
             <div>
@@ -237,7 +237,7 @@
           >
             Cancelar
           </button>
-          <button class="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white">
+          <button @click="createPost" :disabled="submitting" class="btn-sm disabled:bg-indigo-300 bg-indigo-500 hover:bg-indigo-600 text-white">
             Guardar
           </button>
         </div>
@@ -517,7 +517,7 @@ import CategorySidebar from '../../partials/ecommerce/CategorySidebar.vue'
 import ShopCards07 from '../../partials/ecommerce/ShopCards07.vue'
 import PostsTable from '../../partials/posts/PostsTable.vue'
 import PaginationClassic from '../../components/PaginationClassic.vue'
-
+import axios from 'axios'
 import ModalBasic from '../../components/ModalBasic.vue'
 
 export default {
@@ -533,6 +533,19 @@ export default {
     PaginationClassic,
   },
   setup() {
+    
+    const newPost = ref({
+      status: "hi",
+      type: "file",
+      number: "hola",
+      content: "hola",
+      legal_regulation: "hi",
+      image_url: "http",
+      file_url: "a",
+      type_reform: "a",
+      ro: "a",
+    })
+    const submitting = ref(false);
 
     const sidebarOpen = ref(false)
     const selectedItems = ref([])
@@ -552,6 +565,19 @@ export default {
       selectedItems.value = selected
     }
 
+    function createPost() {
+        submitting.value = true;
+        axios.post(import.meta.env.VITE_API_URL+'posts', newPost.value)
+        .then(response => {
+          submitting.value = false
+
+        })
+        .catch(error => {
+          submitting.value = false
+          
+        });
+    };
+
     return {
       sidebarOpen,
       selectedItems,
@@ -562,6 +588,10 @@ export default {
       editPostModalOpen,
       deleteCategoryModalOpen,
       deletePostModalOpen,
+
+      newPost,
+      submitting,
+      createPost
     }  
   }
 }

@@ -4,31 +4,31 @@
       <div class="flex items-center">
         <label class="inline-flex">
           <span class="sr-only">Select</span>
-          <input :id="invoice.id" class="form-checkbox" type="checkbox" :value="value" @change="check" :checked="checked" />
+          <input :id="postid" class="form-checkbox" type="checkbox" :value="value" @change="check" :checked="checked" />
         </label>
       </div>
     </td>
     <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-      <div class="font-medium text-sky-500">{{invoice.invoice}}</div>
+      <div class="font-medium text-sky-500">{{postid.substring(postid.length-7, postid.length)}}</div>
     </td>    
     <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-      <div class="font-medium" :class="totalColor(invoice.status)">{{invoice.total}}</div>
+      <div class="font-medium" :class="totalColor(status)">Falta Titulo</div>
     </td>
     <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-      <div class="inline-flex font-medium rounded-full text-center px-2.5 py-0.5" :class="statusColor(invoice.status)">{{invoice.status}}</div>
+      <div class="inline-flex font-medium rounded-full text-center px-2.5 py-0.5" :class="statusColor(status)">{{status}}</div>
     </td>    
     <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-      <div class="font-medium text-slate-800">{{invoice.customer}}</div>
+      <div class="font-medium text-slate-800">{{ro}}</div>
     </td>
     <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-      <div>{{invoice.issueddate}}</div>
+      <div>Falta Fecha</div>
     </td>
     <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-      <div>{{invoice.paiddate}}</div>
+      <div>Falta Fecha</div>
     </td>
     <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
       <div class="flex items-center">
-        <div>{{invoice.type}}</div>
+        <div>{{type_reform}}</div>
       </div>
     </td>
     <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-px">
@@ -62,7 +62,7 @@ import { computed } from 'vue'
 
 export default {
   name: 'InvoicesTableItem',
-  props: ['invoice', 'value', 'selected'],
+  props: ['postid', 'ro', 'status', 'number', 'type', 'content', 'legal_regulation', 'type_reform','value', 'selected'],
   setup(props, context) {
     const checked = computed(() => props.selected.includes(props.value))
 

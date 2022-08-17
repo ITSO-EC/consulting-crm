@@ -48,11 +48,20 @@
           <!-- Table body -->
           <tbody class="text-sm divide-y divide-slate-200">
             <Post
-              v-for="invoice in invoices"
-              :key="invoice.id"
-              :invoice="invoice"
+              v-for="post of posts"
+              :key="post.id"
+
+              :postid="post.id"
+              :number="post.number"
+              :ro="post.ro"
+              :status="post.status"
+              :type="post.type"
+              :content="post.content"
+              :legal_regulation="post.legal_regulation"
+              :type_reform="post.type_reform"
+
               v-model:selected="selected"
-              :value="invoice.id"
+              :value="post.id"
             />
           </tbody>
         </table>
@@ -63,8 +72,9 @@
 </template>
 
 <script>
-import { ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import Post from './PostTableItem.vue'
+import axios from 'axios'
 
 export default {
   name: 'PostsTable',
@@ -72,10 +82,12 @@ export default {
     Post,
   },  
   props: ['selectedItems'],
+ 
   setup(props, { emit }) {
 
     const selectAll = ref(false)
     const selected = ref([])
+    const posts = ref([]);
 
     const checkAll = () => {
       selected.value = []
@@ -88,7 +100,7 @@ export default {
       selectAll.value = invoices.value.length === selected.value.length ? true : false
       emit('change-selection', selected.value)
     })    
-    
+  
     const invoices = ref([
       {
         id: '0',
@@ -100,103 +112,24 @@ export default {
         paiddate: '-',        
         type: 'Suplemento',
       },
-      {
-        id: '1',
-        invoice: '#779912',
-        total: 'Suplemento Importante SRI',
-        status: 'Corregir',
-        customer: '#42391',
-        issueddate: '22/07/2021',
-        paiddate: '-',        
-        type: 'Suplemento',
-      },
-      {
-        id: '2',
-        invoice: '#889924',
-        total: 'Suplemento Importante SRI',
-        status: 'Pendiente',
-        customer: '#42391',
-        issueddate: '22/07/2021',
-        paiddate: '-',        
-        type: 'Suplemento',
-      },
-      {
-        id: '3',
-        invoice: '#897726',
-        total: 'Suplemento Importante SRI',
-        status: 'Aprobado I',
-        customer: '#42391',
-        issueddate: '22/07/2021',
-        paiddate: '22/07/2021',        
-        type: 'Suplemento',
-      },
-      {
-        id: '4',
-        invoice: '#123567',
-        total: 'Suplemento Importante SRI',
-        status: 'Aprobado I',
-        customer: '#42391',
-        issueddate: '22/07/2021',
-        paiddate: '22/07/2021',        
-        type: 'Suplemento',
-      },
-      {
-        id: '5',
-        invoice: '#896644',
-        total: 'Suplemento Importante SRI',
-        status: 'Aprobado I',
-        customer: '#42391',
-        issueddate: '22/07/2021',
-        paiddate: '22/07/2021',        
-        type: 'Suplemento',
-      },
-      {
-        id: '6',
-        invoice: '#136988',
-        total: 'Suplemento Importante SRI',
-        status: 'Aprobado I',
-        customer: '#42391',
-        issueddate: '22/07/2021',
-        paiddate: '22/07/2021',        
-        type: 'Suplemento',
-      },
-      {
-        id: '7',
-        invoice: '#442206',
-        total: 'Suplemento Importante SRI',
-        status: 'Aprobado II',
-        customer: '#42391',
-        issueddate: '22/07/2021',
-        paiddate: '22/07/2021',        
-        type: 'Suplemento',
-      },
-      {
-        id: '8',
-        invoice: '#764321',
-        total: 'Suplemento Importante SRI',
-        status: 'Aprobado II',
-        customer: '#42391',
-        issueddate: '22/07/2021',
-        paiddate: '22/07/2021',        
-        type: 'Suplemento',
-      },
-      {
-        id: '9',
-        invoice: '#908764',
-        total: 'Suplemento Importante SRI',
-        status: 'Aprobado II',
-        customer: '#42391',
-        issueddate: '22/07/2021',
-        paiddate: '22/07/2021',        
-        type: 'Suplemento',
-       }
     ])
+    function getPosts() {
+      axios.get(import.meta.env.VITE_API_URL+'posts?limit='+10+'&page='+1)
+      .then(response => {
+        posts.value = response.data.results;
+        })
+      .catch(error => console.log(error));
+    }
+    
 
+    onMounted(()=>{
+      getPosts();
+    })
     return {
       selectAll,
       selected,
       checkAll,
-      invoices,
+      posts,
     }
   }
 }
