@@ -51,26 +51,6 @@
               </button>
           </div>
 
-          <!-- Filters -->
-          <div class="mb-4 border-b border-slate-200">
-            <ul class="text-sm font-medium flex flex-nowrap -mx-4 sm:-mx-6 lg:-mx-8 overflow-x-scroll no-scrollbar">
-              <li class="pb-3 mr-6 last:mr-0 first:pl-4 sm:first:pl-6 lg:first:pl-8 last:pr-4 sm:last:pr-6 lg:last:pr-8">
-                <a class="text-indigo-500 whitespace-nowrap" href="#0">Vistas</a>
-              </li>
-              <li class="pb-3 mr-6 last:mr-0 first:pl-4 sm:first:pl-6 lg:first:pl-8 last:pr-4 sm:last:pr-6 lg:last:pr-8">
-                <a class="text-slate-500 hover:text-slate-600 whitespace-nowrap" href="#0">Marco Legal Actualizado</a>
-              </li>
-              <li class="pb-3 mr-6 last:mr-0 first:pl-4 sm:first:pl-6 lg:first:pl-8 last:pr-4 sm:last:pr-6 lg:last:pr-8">
-                <a class="text-slate-500 hover:text-slate-600 whitespace-nowrap" href="#0">Marco Legal Específico</a>
-              </li>
-              <li class="pb-3 mr-6 last:mr-0 first:pl-4 sm:first:pl-6 lg:first:pl-8 last:pr-4 sm:last:pr-6 lg:last:pr-8">
-                <a class="text-slate-500 hover:text-slate-600 whitespace-nowrap" href="#0">Marco Legal Diario</a>
-              </li>
-              <li class="pb-3 mr-6 last:mr-0 first:pl-4 sm:first:pl-6 lg:first:pl-8 last:pr-4 sm:last:pr-6 lg:last:pr-8">
-                <a class="text-slate-500 hover:text-slate-600 whitespace-nowrap" href="#0">Noticias</a>
-              </li>
-            </ul>
-          </div>
 
           <!-- Page content -->
           <div>
@@ -80,10 +60,8 @@
             <div class="mt-8">
               <h2 class="text-xl leading-snug text-slate-800 font-bold mb-5">Vistas</h2>
               <div class="grid grid-cols-12 gap-6">
-                <ShopCards06 />
+                <ShopCards06 :views="views" />
                 
-                <ShopCards06 />
-                <ShopCards06 />
               </div>
             </div>
 
@@ -123,10 +101,10 @@
             </div>
             <!-- Start -->
             <div>
-              <label class="block text-sm font-medium mb-1 mt-2" for="name"
+              <label class="block text-sm font-medium mb-1 mt-2" for="name" 
                 >Nombre</label
               >
-              <input id="name" class="form-input w-full" type="text" />
+              <input id="name" class="form-input w-full" type="text" v-model="newPage.name"/>
             </div>
            
            <!-- Select -->
@@ -134,9 +112,9 @@
               <label class="block text-sm font-medium mb-1 mt-2" for="status"
                 >Estado</label
               >
-              <select id="status" class="form-select">
-                <option>Visible</option>
-                <option>Invisible</option>
+              <select id="status" class="form-select" v-model="newPage.status">
+                <option value="user">Visible</option>
+                <option value="admin">Invisible</option>
               </select>
             </div>
             
@@ -176,7 +154,7 @@
           >
             Cancelar
           </button>
-          <button class="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white">
+          <button :disabled="submitting" @click="createView" class="btn-sm disabled:bg-indigo-300 bg-indigo-500 hover:bg-indigo-600 text-white">
             Guardar
           </button>
         </div>
@@ -187,16 +165,12 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import Sidebar from '../../partials/Sidebar.vue'
 import Header from '../../partials/Header.vue'
-import ShopCards01 from '../../partials/ecommerce/ShopCards01.vue'
-import ShopCards02 from '../../partials/ecommerce/ShopCards02.vue'
-import ShopCards03 from '../../partials/ecommerce/ShopCards03.vue'
-import ShopCards04 from '../../partials/ecommerce/ShopCards04.vue'
-import ShopCards05 from '../../partials/ecommerce/ShopCards05.vue'
 import ShopCards06 from '../../partials/ecommerce/ShopCards06.vue'
 import ModalBasic from '../../components/ModalBasic.vue'
+import axios from 'axios'
 
 export default {
   name: 'Shop',
@@ -204,21 +178,67 @@ export default {
     Sidebar,
     Header,
     ModalBasic,
-    ShopCards01,
-    ShopCards02,
-    ShopCards03,
-    ShopCards04,
-    ShopCards05,
     ShopCards06,
   },
   setup() {
-
+    const newPage = ref({
+      name:'',
+      image_url: '/src/images/applications-image-18.jpg',
+      status: 'user',
+    })
+    const submitting= ref(false);
     const sidebarOpen = ref(false)
     const createModalOpen = ref(false);
+    const selectedPage = ref(1);
+    const totalPages = ref(1);
 
+    const limit = ref(8);
+    const views = ref([]);
+
+    function resetData() {
+      newPage.value = {
+        name:'',
+        image_url: '/src/images/applications-image-18.jpg',
+        status: 'user',
+      }
+    }
+    function createView() {
+        submitting.value = true;
+        axios.post(import.meta.env.VITE_API_URL+'pages', newPage.value)
+        .then(response => {
+          submitting.value = false
+          resetData();
+          getViews();
+        })
+        .catch(error => {
+          submitting.value = false
+          console.log(error)
+          resetData()
+        });
+    };
+
+    function getViews() {
+      axios.get(import.meta.env.VITE_API_URL+'pages?limit='+limit.value+'&page='+selectedPage.value)
+      .then(response => {
+        console.log(response.data);
+        views.value = response.data.results;
+        totalPages.value = response.data.totalPages;
+        })
+      .catch(error => console.log(error));
+    }
+
+    onMounted(()=> {
+      getViews();
+    })
     return {
+      newPage,
       sidebarOpen,
-      createModalOpen
+      createModalOpen,
+      totalPages,
+      selectedPage,
+      views,
+      createView,
+      submitting
     }  
   }
 }
