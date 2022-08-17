@@ -68,7 +68,7 @@
           <div class="flex justify-center mb-2">
             <router-link
               class="relative inline-flex items-start"
-              :to="item.link"
+              :to="'#'"
             >
               <div
                 class="
@@ -93,7 +93,7 @@
               </div>
               <img
                 class="rounded-full"
-                :src="item.image"
+                :src="Image01"
                 width="64"
                 height="64"
                 :alt="item.name"
@@ -103,7 +103,7 @@
           <div class="text-center">
             <router-link
               class="inline-flex text-slate-800 hover:text-slate-900"
-              :to="item.link"
+              :to="'#'"
             >
               <h2 class="text-xl leading-snug justify-center font-semibold">
                 {{ item.name }}
@@ -114,12 +114,12 @@
             <span class="text-sm font-medium text-slate-400 -mt-0.5 mr-1"
               >-&gt;</span
             >
-            <span>{{ item.location }}</span>
+            <span>{{ item.role }}</span>
           </div>
         </header>
         <!-- Bio -->
         <div class="text-center mt-2">
-          <div class="text-sm">{{ item.content }}</div>
+          <div class="text-sm">{{ item.email }}</div>
         </div>
       </div>
       <!-- Card footer -->
@@ -164,7 +164,7 @@
              
               <img
                 class="rounded-full cursor-pointer hover:grayscale ease-in-out duration-300 active:grayscale-0"
-                :src="item.image"
+                :src="Image01"
                 width="64"
                 height="64"
                 :alt="item.name"
@@ -172,43 +172,37 @@
             </div>
             <!-- Start -->
             <div>
-              <label class="block text-sm font-medium mb-1 " for="name"
+              <label class="block text-sm font-medium mb-1 " :for="`name-${item.id}`"
                 >Nombre y Apellido</label
               >
-              <input id="name" class="form-input w-full" type="text" />
+              <input :id="`name-${item.id}`" class="form-input w-full" type="text" :value="item.name" />
             </div>
             <!-- Start -->
             <div>
-              <label class="block text-sm font-medium mb-1 " for="email"
+              <label class="block text-sm font-medium mb-1 " :for="`email-${item.id}`"
                 >Correo</label
               >
-              <input id="email" class="form-input w-full" type="text" />
+              <input :id="`email-${item.id}`" class="form-input w-full" type="text" :value="item.email"/>
             </div>
 
+           
             <!-- Start -->
             <div>
-              <label class="block text-sm font-medium mb-1" for="phrase"
-                >Breve Descripción</label
-              >
-              <input id="phrase" class="form-input w-full" type="text" />
-            </div>
-            <!-- Start -->
-            <div>
-              <label class="block text-sm font-medium mb-1" for="cellphone"
+              <label class="block text-sm font-medium mb-1" :for="`cellphone-${item.id}`" 
                 >Celular</label
               >
-              <input id="cellphone" class="form-input w-full" type="text" />
+              <input :id="`cellphone-${item.id}`" class="form-input w-full" type="text" :value="item.cellphone"/>
             </div>
 
             <!-- Select -->
             <div>
-              <label class="block text-sm font-medium mb-1" for="country"
+              <label class="block text-sm font-medium mb-1" :for="`role-${item.id}`" 
                 >Rol</label
               >
-              <select id="country" class="form-select">
-                <option>Creador</option>
-                <option>Revisor I</option>
-                <option>Revisor II</option>
+              <select :id="`role-${item.id}`" class="form-select" :value="item.role">
+                <option value="user">Creador</option>
+                <option value="revisorone">Revisor I</option>
+                <option value="revisortwo">Revisor II</option>
               </select>
             </div>
           </div>
@@ -250,10 +244,10 @@
           <div class="space-y-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
             <!-- Select -->
             <div>
-              <label class="block text-sm font-medium mb-1" for="country"
+              <label class="block text-sm font-medium mb-1" :for="`role-${item.id}`"
                 >Rol</label
               >
-              <select id="country" class="form-select">
+              <select :id="`role-${item.id}`" class="form-select">
                 <option>Creador</option>
                 <option>Revisor I</option>
                 <option>Revisor II</option>
@@ -355,6 +349,8 @@ import EditMenu from "../../components/DropdownEditMenu.vue";
 import ModalBasic from "../../components/ModalBasic.vue";
 import ModalBlank from '../../components/ModalBlank.vue'
 
+import Image01 from '../../images/user-64-01.jpg'
+
 export default {
   name: "UsersTabsCard",
   props: ["item"],
@@ -372,6 +368,7 @@ export default {
       basicModalOpen,
       roleModalOpen,
       dangerModalOpen,
+      Image01
     };
   },
 };

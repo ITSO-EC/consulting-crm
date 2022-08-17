@@ -28,12 +28,15 @@
         </button>
         <!-- Logo -->
         <router-link class="block text-center" to="/">
-          <img src="../images/excecon-favicon-32x32.png" class="w-8" alt="logo excecon">
+          <div class="overflow-hidden h-44">
+              
+            <img src="../images/logo-excecon.png" class="w-44" alt="logo excecon">
+          </div>
         </router-link>
       </div>
 
       <!-- Links -->
-      <div class="space-y-8">
+      <div class="space-y-8 -mt-8">
         <!-- Pages group -->
         <div>
           <h3 class="text-xs uppercase text-slate-500 font-semibold pl-3">

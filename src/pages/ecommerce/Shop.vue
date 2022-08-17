@@ -40,7 +40,10 @@
                 
           </div>
             <!-- Add order button -->
-              <button class="btn bg-indigo-500 hover:bg-indigo-600 text-white mb-6 justify-self-start sm:justify-self-end">
+              <button 
+              @click.stop="createModalOpen = true"
+              class="btn bg-indigo-500 hover:bg-indigo-600 
+              text-white mb-6 justify-self-start sm:justify-self-end">
                 <svg class="w-4 h-4 fill-current opacity-50 shrink-0" viewBox="0 0 16 16">
                   <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
                 </svg>
@@ -93,6 +96,92 @@
       </main>
 
     </div> 
+    
+    <!-- Create View-->
+    <ModalBasic
+      :modalOpen="createModalOpen"
+      @close-modal="createModalOpen = false"
+      title="Crear Vista"
+    >
+      <!-- Modal content -->
+      <div class="px-5 pt-4 pb-1">
+        <div class="text-sm">
+          <div class="font-medium text-slate-800 mb-2">
+            Haga click sobre la foto para cambiarla.
+          </div>
+          <div class="space-y-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            
+            <div class="flex justify-center sm:col-span-2">
+             
+              <img
+                class="cursor-pointer hover:grayscale ease-in-out duration-300 active:grayscale-0 w-44 h-24"
+                :src="'/src/images/applications-image-18.jpg'"
+                width="120"
+                height="80"
+                :alt="'Foto de la vista'"
+              />
+            </div>
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1 mt-2" for="name"
+                >Nombre</label
+              >
+              <input id="name" class="form-input w-full" type="text" />
+            </div>
+           
+           <!-- Select -->
+            <div>
+              <label class="block text-sm font-medium mb-1 mt-2" for="status"
+                >Estado</label
+              >
+              <select id="status" class="form-select">
+                <option>Visible</option>
+                <option>Invisible</option>
+              </select>
+            </div>
+            
+
+            <!-- Select -->
+            <div>
+              <label class="block text-sm font-medium mb-1 mt-2" for="categories"
+                >Categorías</label
+              >
+              <div class="flex h-12 gap-2 items-center justify-cneter">
+                <input id="categories" class="form-input w-full" type="text" /> 
+                <button 
+                class="btn bg-indigo-500 hover:bg-indigo-600 
+                text-white justify-self-start sm:justify-self-end">
+                  <svg class="h-[18px] fill-current opacity-50 shrink-0" viewBox="0 0 16 16">
+                    <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
+                  </svg>
+                  
+                </button>
+              </div>
+             
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Modal footer -->
+      <div class="px-5 py-4">
+        <div class="flex flex-wrap justify-end space-x-2">
+          <button
+            class="
+              btn-sm
+              border-slate-200
+              hover:border-slate-300
+              text-slate-600
+            "
+            @click.stop="createModalOpen = false"
+          >
+            Cancelar
+          </button>
+          <button class="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white">
+            Guardar
+          </button>
+        </div>
+      </div>
+    </ModalBasic>
 
   </div>
 </template>
@@ -107,12 +196,14 @@ import ShopCards03 from '../../partials/ecommerce/ShopCards03.vue'
 import ShopCards04 from '../../partials/ecommerce/ShopCards04.vue'
 import ShopCards05 from '../../partials/ecommerce/ShopCards05.vue'
 import ShopCards06 from '../../partials/ecommerce/ShopCards06.vue'
+import ModalBasic from '../../components/ModalBasic.vue'
 
 export default {
   name: 'Shop',
   components: {
     Sidebar,
     Header,
+    ModalBasic,
     ShopCards01,
     ShopCards02,
     ShopCards03,
@@ -123,9 +214,11 @@ export default {
   setup() {
 
     const sidebarOpen = ref(false)
+    const createModalOpen = ref(false);
 
     return {
       sidebarOpen,
+      createModalOpen
     }  
   }
 }

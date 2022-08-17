@@ -49,7 +49,7 @@
                 <svg class="w-4 h-4 fill-current opacity-50 shrink-0" viewBox="0 0 16 16">
                   <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
                 </svg>
-                <span class="block ml-2" @click.stop="registerModalOpen = true">Agregar Categoría</span>
+                <span class="block ml-2" @click.stop="createCategoryModalOpen = true">Agregar Categoría</span>
               </button>   
             </div>
                    
@@ -91,8 +91,10 @@
               <div class="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
                 <!-- Search form -->
                 <SearchForm placeholder="Buscar Publicación" />
-                <!-- Create invoice button -->
-                <button class="btn bg-indigo-500 hover:bg-indigo-600 text-white">
+                <!-- Create post button -->
+                <button 
+                @click.stop="createPostModalOpen = true"
+                class="btn bg-indigo-500 hover:bg-indigo-600 text-white">
                   <svg class="w-4 h-4 fill-current opacity-50 shrink-0" viewBox="0 0 16 16">
                     <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
                   </svg>
@@ -123,7 +125,386 @@
       </main>
 
     </div> 
+    
+    <!-- Create Post -->
+    <ModalBasic
+      :modalOpen="createPostModalOpen"
+      @close-modal="createPostModalOpen = false"
+      title="Crear Publicación"
+    >
+      <!-- Modal content -->
+      <div class="px-5 pt-4 pb-1">
+        <div class="text-sm">
+          <div class="font-medium text-slate-800 mb-2">
+            Haga click sobre el círculo y elija una foto apropiada.
+          </div>
+          <div class="space-y-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            
+            <div class="flex justify-center sm:col-span-2">
+             
+              <img
+                class="rounded-full cursor-pointer hover:grayscale ease-in-out duration-300 active:grayscale-0"
+                :src="'../src/images/user-64-01.jpg'"
+                width="64"
+                height="64"
+                :alt="'Foto de perfil'"
+              />
+            </div>
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1 mt-2" for="title"
+                >Titulo</label
+              >
+              <input id="title" class="form-input w-full" type="text" />
+            </div>
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1 mt-2" for="ronumber"
+                >Número de R.O.</label
+              >
+              <input id="ronumber" class="form-input w-full" type="text" />
+            </div>
 
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="legalnorm"
+                >Norma Legal</label
+              >
+              <input id="legalnorm" class="form-input w-full" type="text" />
+            </div>
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="normnum"
+                >Número de norma</label
+              >
+              <input id="normnum" class="form-input w-full" type="text" />
+            </div>
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="reformtype"
+                >Tipo de Reforma</label
+              >
+              <input id="reformtype" class="form-input w-full" type="text" />
+            </div>
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="description"
+                >Descripción</label
+              >
+              <input id="description" class="form-input w-full" type="text" />
+            </div>
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="reference"
+                >Referencia</label
+              >
+              <input id="reference" class="form-input w-full" type="text" />
+            </div>
+             <!-- Select -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="country"
+                >Categoría </label
+              >
+              <select id="country" class="form-select">
+                <option>Categoria 1</option>
+                <option>Categoria 2</option>
+                <option>Categoria 3</option>
+              </select>
+            </div>
+
+            
+            <!-- Start -->
+            <div class="sm:col-span-2">
+              <label class="block text-sm font-medium mb-1" for="reference"
+                >Archivo Adjunto</label
+              >
+              <input id="reference" class="form-input w-full" type="file" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Modal footer -->
+      <div class="px-5 py-4">
+        <div class="flex flex-wrap justify-end space-x-2">
+          <button
+            class="
+              btn-sm
+              border-slate-200
+              hover:border-slate-300
+              text-slate-600
+            "
+            @click.stop="createPostModalOpen = false"
+          >
+            Cancelar
+          </button>
+          <button class="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white">
+            Guardar
+          </button>
+        </div>
+      </div>
+    </ModalBasic>
+    
+    <!-- Create Category Modal -->
+    <ModalBasic
+      :modalOpen="createCategoryModalOpen"
+      @close-modal="createCategoryModalOpen = false"
+      title="Crear Categoría"
+    >
+      <!-- Modal content -->
+      <div class="px-5 pt-4 pb-1">
+        <div class="text-sm">
+    
+          <div class="space-y-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1 mt-2" for="name"
+                >Nombre</label
+              >
+              <input id="name" class="form-input w-full" type="text" />
+            </div>
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1 " for="email"
+                >Vistas Madre</label
+              >
+              <input id="email" class="form-input w-full" type="text" />
+            </div>
+
+            
+          </div>
+        </div>
+      </div>
+      <!-- Modal footer -->
+      <div class="px-5 py-4">
+        <div class="flex flex-wrap justify-end space-x-2">
+          <button
+            class="
+              btn-sm
+              border-slate-200
+              hover:border-slate-300
+              text-slate-600
+            "
+            @click.stop="createCategoryModalOpen = false"
+          >
+            Cancelar
+          </button>
+          <button class="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white">
+            Guardar
+          </button>
+        </div>
+      </div>
+    </ModalBasic>
+
+    
+    <!-- Edit Post -->
+    <ModalBasic
+      :modalOpen="editPostModalOpen"
+      @close-modal="editPostModalOpen = false"
+      title="Editar Operador"
+    >
+      <!-- Modal content -->
+      <div class="px-5 pt-4 pb-1">
+        <div class="text-sm">
+          <div class="font-medium text-slate-800 mb-2">
+            Haga click sobre el círculo y elija una foto de perfil.
+          </div>
+          <div class="space-y-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            
+            <div class="flex justify-center sm:col-span-2">
+             
+              <img
+                class="rounded-full cursor-pointer hover:grayscale ease-in-out duration-300 active:grayscale-0"
+                :src="Image01 != null ? Image01 :'../src/images/user-64-01.jpg'"
+                width="64"
+                height="64"
+                :alt="'Foto de perfil'"
+              />
+            </div>
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1 mt-2" for="name"
+                >Nombre y Apellido</label
+              >
+              <input id="name" class="form-input w-full" type="text" />
+            </div>
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1 mt-2" for="email"
+                >Correo</label
+              >
+              <input id="email" class="form-input w-full" type="text" />
+            </div>
+
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="phrase"
+                >Breve Descripción</label
+              >
+              <input id="phrase" class="form-input w-full" type="text" />
+            </div>
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="cellphone"
+                >Celular</label
+              >
+              <input id="cellphone" class="form-input w-full" type="text" />
+            </div>
+
+           
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="password"
+                >Clave</label
+              >
+              <input id="password" class="form-input w-full" type="password" />
+            </div>
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="password"
+                >Confirmar Clave</label
+              >
+              <input id="password" class="form-input w-full" type="password" />
+            </div>
+             <!-- Select -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="country"
+                >Rol</label
+              >
+              <select id="country" class="form-select">
+                <option>Creador</option>
+                <option>Revisor I</option>
+                <option>Revisor II</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Modal footer -->
+      <div class="px-5 py-4">
+        <div class="flex flex-wrap justify-end space-x-2">
+          <button
+            class="
+              btn-sm
+              border-slate-200
+              hover:border-slate-300
+              text-slate-600
+            "
+            @click.stop="createPostModalOpen = false"
+          >
+            Cancelar
+          </button>
+          <button class="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white">
+            Guardar
+          </button>
+        </div>
+      </div>
+    </ModalBasic>
+
+    
+    <!-- Edit Category -->
+    <ModalBasic
+      :modalOpen="editPostModalOpen"
+      @close-modal="editPostModalOpen = false"
+      title="Editar Operador"
+    >
+      <!-- Modal content -->
+      <div class="px-5 pt-4 pb-1">
+        <div class="text-sm">
+          <div class="font-medium text-slate-800 mb-2">
+            Haga click sobre el círculo y elija una foto de perfil.
+          </div>
+          <div class="space-y-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            
+            <div class="flex justify-center sm:col-span-2">
+             
+              <img
+                class="rounded-full cursor-pointer hover:grayscale ease-in-out duration-300 active:grayscale-0"
+                :src="Image01 != null ? Image01 :'../src/images/user-64-01.jpg'"
+                width="64"
+                height="64"
+                :alt="'Foto de perfil'"
+              />
+            </div>
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1 mt-2" for="name"
+                >Nombre y Apellido</label
+              >
+              <input id="name" class="form-input w-full" type="text" />
+            </div>
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1 mt-2" for="email"
+                >Correo</label
+              >
+              <input id="email" class="form-input w-full" type="text" />
+            </div>
+
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="phrase"
+                >Breve Descripción</label
+              >
+              <input id="phrase" class="form-input w-full" type="text" />
+            </div>
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="cellphone"
+                >Celular</label
+              >
+              <input id="cellphone" class="form-input w-full" type="text" />
+            </div>
+
+           
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="password"
+                >Clave</label
+              >
+              <input id="password" class="form-input w-full" type="password" />
+            </div>
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="password"
+                >Confirmar Clave</label
+              >
+              <input id="password" class="form-input w-full" type="password" />
+            </div>
+             <!-- Select -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="country"
+                >Rol</label
+              >
+              <select id="country" class="form-select">
+                <option>Creador</option>
+                <option>Revisor I</option>
+                <option>Revisor II</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Modal footer -->
+      <div class="px-5 py-4">
+        <div class="flex flex-wrap justify-end space-x-2">
+          <button
+            class="
+              btn-sm
+              border-slate-200
+              hover:border-slate-300
+              text-slate-600
+            "
+            @click.stop="createPostModalOpen = false"
+          >
+            Cancelar
+          </button>
+          <button class="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white">
+            Guardar
+          </button>
+        </div>
+      </div>
+    </ModalBasic>
   </div>
 </template>
 
@@ -137,11 +518,14 @@ import ShopCards07 from '../../partials/ecommerce/ShopCards07.vue'
 import PostsTable from '../../partials/posts/PostsTable.vue'
 import PaginationClassic from '../../components/PaginationClassic.vue'
 
+import ModalBasic from '../../components/ModalBasic.vue'
+
 export default {
   name: 'Workspace',
   components: {
     Sidebar,
     SearchForm,
+    ModalBasic,
     PostsTable,
     Header,
     CategorySidebar,
@@ -153,6 +537,17 @@ export default {
     const sidebarOpen = ref(false)
     const selectedItems = ref([])
 
+    
+    const createCategoryModalOpen = ref(false);
+    const createPostModalOpen = ref(false);
+    
+    const editCategoryModalOpen = ref(false);
+    const editPostModalOpen = ref(false);
+
+    
+    const deleteCategoryModalOpen = ref(false);
+    const deletePostModalOpen = ref(false);
+
     const updateSelectedItems = (selected) => {
       selectedItems.value = selected
     }
@@ -160,7 +555,13 @@ export default {
     return {
       sidebarOpen,
       selectedItems,
-      updateSelectedItems
+      updateSelectedItems,
+      createCategoryModalOpen,
+      createPostModalOpen,
+      editCategoryModalOpen,
+      editPostModalOpen,
+      deleteCategoryModalOpen,
+      deletePostModalOpen,
     }  
   }
 }
