@@ -99,7 +99,7 @@
               <label class="block text-sm font-medium mb-1" for="cellphone"
                 >Celular</label
               >
-              <input id="cellphone" class="form-input w-full" type="text" />
+              <input id="cellphone" class="form-input w-full" type="text" v-model="newUser.phone_number" />
             </div>
 
            
@@ -182,7 +182,7 @@ export default {
         name: '',
         email: '',
         password: '',
-        //cellphone: '',
+        phone_number: '',
         role: '',
     })
     const confirmation = ref('')
@@ -210,7 +210,7 @@ export default {
         name: '',
         email: '',
         password: '',            
-        //cellphone: '',
+        phone_number: '',
         role: '',
       }
       confirmation.value = ''
