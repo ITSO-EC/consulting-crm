@@ -112,7 +112,7 @@
               <div>
                 
                 <!-- Table -->
-                <PostsTable @change-selection="updateSelectedItems($event)" />
+                <PostsTable @change-selection="updateSelectedItems($event)" :posts="posts" />
 
               </div>
 
@@ -148,7 +148,7 @@
              
               <img
                 class="rounded-full cursor-pointer hover:grayscale ease-in-out duration-300 active:grayscale-0"
-                :src="'../src/images/user-64-01.jpg'"
+                :src="'../../src/images/user-64-01.jpg'"
                 width="64"
                 height="64"
                 :alt="'Foto de perfil'"
@@ -159,7 +159,7 @@
               <label class="block text-sm font-medium mb-1 mt-2" for="title"
                 >Titulo</label
               >
-              <input id="title" class="form-input w-full" type="text" />
+              <input id="title" class="form-input w-full" type="text" v-model="newPost.title"/>
             </div>
             <!-- Start -->
             <div>
@@ -200,29 +200,29 @@
             <!-- Start -->
             <div>
               <label class="block text-sm font-medium mb-1" for="reference"
-                >Referencia</label
+                >Tipo de Norma</label
               >
-              <input id="reference" class="form-input w-full" type="text" />
+              <input id="reference" class="form-input w-full" type="text" v-model="newPost.type"/>
             </div>
              <!-- Select -->
             <div>
               <label class="block text-sm font-medium mb-1" for="country"
                 >Categoría </label
               >
-              <select id="country" class="form-select">
-                <option>Categoria 1</option>
-                <option>Categoria 2</option>
-                <option>Categoria 3</option>
+              <select id="country" class="form-select" v-model="newPost.category">
+                <option :value="category.id" v-for="category in categories" :key="`CategorySelect-${category.id}`">
+                  {{category.name}}
+                </option>
               </select>
             </div>
 
             
             <!-- Start -->
             <div class="sm:col-span-2">
-              <label class="block text-sm font-medium mb-1" for="reference"
+              <label class="block text-sm font-medium mb-1" for="file"
                 >Archivo Adjunto</label
               >
-              <input id="reference" class="form-input w-full" type="file" />
+              <input id="file" class="form-input w-full" type="text" v-model="newPost.file_url"/>
             </div>
           </div>
         </div>
@@ -262,17 +262,17 @@
             
             <!-- Start -->
             <div>
-              <label class="block text-sm font-medium mb-1 mt-2" for="name"
+              <label class="block text-sm font-medium mb-1 mt-2" for="cc-name"
                 >Nombre</label
               >
-              <input id="name" class="form-input w-full" type="text" v-model="newCategory.name"/>
+              <input id="cc-name" class="form-input w-full" type="text" v-model="newCategory.name"/>
             </div>
             <!-- Start -->
             <div>
-              <label class="block text-sm font-medium mb-1 " for="email"
+              <label class="block text-sm font-medium mb-1 " for="cc-email"
                 >Vistas Madre</label
               >
-              <input id="email" class="form-input w-full" type="text" />
+              <input id="cc-email" class="form-input w-full" type="text" />
             </div>
 
             
@@ -313,13 +313,13 @@
           <div class="font-medium text-slate-800 mb-2">
             Haga click sobre el círculo y elija una foto de perfil.
           </div>
-          <div class="space-y-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <form class="space-y-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
             
             <div class="flex justify-center sm:col-span-2">
              
               <img
                 class="rounded-full cursor-pointer hover:grayscale ease-in-out duration-300 active:grayscale-0"
-                :src="Image01 != null ? Image01 :'../src/images/user-64-01.jpg'"
+                :src="'../src/images/user-64-01.jpg'"
                 width="64"
                 height="64"
                 :alt="'Foto de perfil'"
@@ -327,17 +327,17 @@
             </div>
             <!-- Start -->
             <div>
-              <label class="block text-sm font-medium mb-1 mt-2" for="name"
+              <label class="block text-sm font-medium mb-1 mt-2" for="ep-name"
                 >Nombre y Apellido</label
               >
-              <input id="name" class="form-input w-full" type="text" />
+              <input id="ep-name" class="form-input w-full" type="text" />
             </div>
             <!-- Start -->
             <div>
-              <label class="block text-sm font-medium mb-1 mt-2" for="email"
+              <label class="block text-sm font-medium mb-1 mt-2" for="ep-email"
                 >Correo</label
               >
-              <input id="email" class="form-input w-full" type="text" />
+              <input id="ep-email" class="form-input w-full" type="text" />
             </div>
 
             <!-- Start -->
@@ -358,17 +358,17 @@
            
             <!-- Start -->
             <div>
-              <label class="block text-sm font-medium mb-1" for="password"
+              <label class="block text-sm font-medium mb-1" for="ep-password"
                 >Clave</label
               >
-              <input id="password" class="form-input w-full" type="password" />
+              <input id="ep-password" class="form-input w-full" type="password" />
             </div>
             <!-- Start -->
             <div>
-              <label class="block text-sm font-medium mb-1" for="password"
+              <label class="block text-sm font-medium mb-1" for="ep-confpassword"
                 >Confirmar Clave</label
               >
-              <input id="password" class="form-input w-full" type="password" />
+              <input id="ep-confpassword" class="form-input w-full" type="password" />
             </div>
              <!-- Select -->
             <div>
@@ -381,7 +381,7 @@
                 <option>Revisor II</option>
               </select>
             </div>
-          </div>
+          </form>
         </div>
       </div>
       <!-- Modal footer -->
@@ -418,13 +418,13 @@
           <div class="font-medium text-slate-800 mb-2">
             Haga click sobre el círculo y elija una foto de perfil.
           </div>
-          <div class="space-y-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <form class="space-y-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
             
             <div class="flex justify-center sm:col-span-2">
              
               <img
                 class="rounded-full cursor-pointer hover:grayscale ease-in-out duration-300 active:grayscale-0"
-                :src="Image01 != null ? Image01 :'../src/images/user-64-01.jpg'"
+                :src="'../src/images/user-64-01.jpg'"
                 width="64"
                 height="64"
                 :alt="'Foto de perfil'"
@@ -432,17 +432,17 @@
             </div>
             <!-- Start -->
             <div>
-              <label class="block text-sm font-medium mb-1 mt-2" for="name"
+              <label class="block text-sm font-medium mb-1 mt-2" for="ec-name"
                 >Nombre y Apellido</label
               >
-              <input id="name" class="form-input w-full" type="text" />
+              <input id="ec-name" class="form-input w-full" type="text" />
             </div>
             <!-- Start -->
             <div>
-              <label class="block text-sm font-medium mb-1 mt-2" for="email"
+              <label class="block text-sm font-medium mb-1 mt-2" for="ec-email"
                 >Correo</label
               >
-              <input id="email" class="form-input w-full" type="text" />
+              <input id="ec-email" class="form-input w-full" type="text" />
             </div>
 
             <!-- Start -->
@@ -463,17 +463,17 @@
            
             <!-- Start -->
             <div>
-              <label class="block text-sm font-medium mb-1" for="password"
+              <label class="block text-sm font-medium mb-1" for="ec-password"
                 >Clave</label
               >
-              <input id="password" class="form-input w-full" type="password" />
+              <input id="ec-password" class="form-input w-full" type="password" />
             </div>
             <!-- Start -->
             <div>
-              <label class="block text-sm font-medium mb-1" for="password"
+              <label class="block text-sm font-medium mb-1" for="ec-confpassword"
                 >Confirmar Clave</label
               >
-              <input id="password" class="form-input w-full" type="password" />
+              <input id="ec-confpassword" class="form-input w-full" type="password" />
             </div>
              <!-- Select -->
             <div>
@@ -486,7 +486,7 @@
                 <option>Revisor II</option>
               </select>
             </div>
-          </div>
+          </form>
         </div>
       </div>
       <!-- Modal footer -->
@@ -548,15 +548,18 @@ export default {
      const router = useRouter()
     const route = useRoute()
     const newPost = ref({
-      status: "hi",
-      type: "file",
-      number: "hola",
-      content: "hola",
-      legal_regulation: "hi",
+      status: "user",
+      type: "",
+      number: "",
+      title: "",
+      content: "",
+      legal_regulation: "",
       image_url: "http",
-      file_url: "a",
-      type_reform: "a",
-      ro: "a",
+      file_url: "",
+      type_reform: "",
+      category: "",
+      //reference: "6309e58b6310870021f66e05",
+      ro: "",
     })
     
     const newCategory = ref({
@@ -640,10 +643,16 @@ export default {
 
       if(this.$route.params.categoryId != null)
       {
-        axios.get(import.meta.env.VITE_API_URL+'posts/?byCategory='+this.$route.params.id)
-      .then((res)=> {
-      this.posts = res.data.results;
-      })
+        console.log(this.$route.params);
+        axios.get(import.meta.env.VITE_API_URL+'posts/?byCategory='+this.$route.params.categoryId)
+        .then((res)=> {
+        this.posts = res.data.results;
+        console.log(this.posts);
+        })
+        .catch((err)=>{
+          console.log(err)
+        });
+        
       }
       
     })

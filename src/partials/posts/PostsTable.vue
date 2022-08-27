@@ -50,16 +50,7 @@
             <Post
               v-for="post of posts"
               :key="post.id"
-
-              :postid="post.id"
-              :number="post.number"
-              :ro="post.ro"
-              :status="post.status"
-              :type="post.type"
-              :content="post.content"
-              :legal_regulation="post.legal_regulation"
-              :type_reform="post.type_reform"
-
+              :post="post"
               v-model:selected="selected"
               :value="post.id"
             />
@@ -81,13 +72,13 @@ export default {
   components: {
     Post,
   },  
-  props: ['selectedItems'],
+  props: ['selectedItems', 'posts'],
  
   setup(props, { emit }) {
 
     const selectAll = ref(false)
     const selected = ref([])
-    const posts = ref([]);
+    //const posts = ref(props.posts);
 
     const checkAll = () => {
       selected.value = []
@@ -114,11 +105,11 @@ export default {
       },
     ])
     function getPosts() {
-      axios.get(import.meta.env.VITE_API_URL+'posts?limit='+10+'&page='+1)
-      .then(response => {
-        posts.value = response.data.results;
-        })
-      .catch(error => console.log(error));
+      // axios.get(import.meta.env.VITE_API_URL+'posts?limit='+10+'&page='+1)
+      // .then(response => {
+      //   posts.value = response.data.results;
+      //   })
+      // .catch(error => console.log(error));
     }
     
 
@@ -129,7 +120,7 @@ export default {
       selectAll,
       selected,
       checkAll,
-      posts,
+      //posts,
     }
   }
 }

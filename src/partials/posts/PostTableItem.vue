@@ -4,21 +4,21 @@
       <div class="flex items-center">
         <label class="inline-flex">
           <span class="sr-only">Select</span>
-          <input :id="postid" class="form-checkbox" type="checkbox" :value="value" @change="check" :checked="checked" />
+          <input :id="post.id" class="form-checkbox" type="checkbox" :value="value" @change="check" :checked="checked" />
         </label>
       </div>
     </td>
     <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-      <div class="font-medium text-sky-500">{{postid.substring(postid.length-7, postid.length)}}</div>
+      <div class="font-medium text-sky-500">{{post.id.substring(post.id.length-7, post.id.length)}}</div>
     </td>    
     <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-      <div class="font-medium" :class="totalColor(status)">Falta Titulo</div>
+      <div class="font-medium" :class="totalColor(post.status)">{{post.title}}</div>
     </td>
     <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-      <div class="inline-flex font-medium rounded-full text-center px-2.5 py-0.5" :class="statusColor(status)">{{status}}</div>
+      <div class="inline-flex font-medium rounded-full text-center px-2.5 py-0.5" :class="statusColor(post.status)">{{post.status}}</div>
     </td>    
     <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-      <div class="font-medium text-slate-800">{{ro}}</div>
+      <div class="font-medium text-slate-800">{{post.ro}}</div>
     </td>
     <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
       <div>Falta Fecha</div>
@@ -28,7 +28,7 @@
     </td>
     <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
       <div class="flex items-center">
-        <div>{{type_reform}}</div>
+        <div>{{post.type_reform}}</div>
       </div>
     </td>
     <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-px">
@@ -62,7 +62,7 @@ import { computed } from 'vue'
 
 export default {
   name: 'InvoicesTableItem',
-  props: ['postid', 'ro', 'status', 'number', 'type', 'content', 'legal_regulation', 'type_reform','value', 'selected'],
+  props: ['post','value', 'selected'],
   setup(props, context) {
     const checked = computed(() => props.selected.includes(props.value))
 
