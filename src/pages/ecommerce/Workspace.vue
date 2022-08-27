@@ -13,7 +13,8 @@
       <main>
         <div class="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
           <div class=" w-full h-44 absolute overflow-y-hidden -my-8 -mx-4 sm:-mx-6 lg:-mx-8 z-0">
-            <img class="" src="https://images.unsplash.com/photo-1542435503-956c469947f6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1674&q=80" alt="">
+            <img class="w-screen" :src="view.image_url" alt="portada">
+            <!-- https://images.unsplash.com/photo-1542435503-956c469947f6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1674&q=80 -->
           </div>
           <!-- Page header -->
           <div class="sm:flex sm:justify-between sm:items-center mb-8 h-44">
@@ -23,7 +24,7 @@
                 appearance-none
                 active:ring-0 focus:ring-0 ring-0
                 border-none
-                " value="Marco Legal Actualizado"/>
+                " :value="view.name"/>
                 <input type="text" class="block -mt-4 text-lg md:text-xl text-slate-600 font-bold bg-transparent 
                 appearance-none
                 active:ring-0 focus:ring-0 ring-0
@@ -59,7 +60,10 @@
           <div class="absolute flex flex-col space-y-10 sm:flex-row sm:space-x-6 sm:space-y-0 md:flex-col md:space-x-0 md:space-y-10 xl:flex-row xl:space-x-6 xl:space-y-0 mt-2">
 
             <!-- Sidebar -->
-            <CategorySidebar />
+            <CategorySidebar :key="submitting" :categories="categories || {
+              name:'default',
+              id:'2122'
+            }"/>
 
             <!-- Content -->
             <div>
@@ -261,7 +265,7 @@
               <label class="block text-sm font-medium mb-1 mt-2" for="name"
                 >Nombre</label
               >
-              <input id="name" class="form-input w-full" type="text" />
+              <input id="name" class="form-input w-full" type="text" v-model="newCategory.name"/>
             </div>
             <!-- Start -->
             <div>
@@ -289,7 +293,7 @@
           >
             Cancelar
           </button>
-          <button class="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white">
+          <button @click.stop="createCategory(); createCategoryModalOpen = false" class="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white">
             Guardar
           </button>
         </div>
@@ -519,6 +523,7 @@ import PostsTable from '../../partials/posts/PostsTable.vue'
 import PaginationClassic from '../../components/PaginationClassic.vue'
 import axios from 'axios'
 import ModalBasic from '../../components/ModalBasic.vue'
+import { useRouter, useRoute } from 'vue-router'
 
 export default {
   name: 'Workspace',
@@ -532,8 +537,16 @@ export default {
     ShopCards07,    
     PaginationClassic,
   },
+  data() {
+    return {
+      view:{},
+      categories: {},
+      posts: {},
+    }
+  },
   setup() {
-    
+     const router = useRouter()
+    const route = useRoute()
     const newPost = ref({
       status: "hi",
       type: "file",
@@ -544,6 +557,13 @@ export default {
       file_url: "a",
       type_reform: "a",
       ro: "a",
+    })
+    
+    const newCategory = ref({
+      name: "",
+      image_url: "test",
+      status: "user",
+      page: route.params.id
     })
     const submitting = ref(false);
 
@@ -567,6 +587,7 @@ export default {
 
     function createPost() {
         submitting.value = true;
+
         axios.post(import.meta.env.VITE_API_URL+'posts', newPost.value)
         .then(response => {
           submitting.value = false
@@ -577,6 +598,17 @@ export default {
           
         });
     };
+    function createCategory() {
+      submitting.value = true;
+      axios.post(import.meta.env.VITE_API_URL+'categories', newCategory.value)
+      .then(response => {
+      submitting.value = false
+      console.log(response.data);
+      })
+      .catch(error => {
+        submitting.value = false      
+      });
+    };
 
     return {
       sidebarOpen,
@@ -584,15 +616,40 @@ export default {
       updateSelectedItems,
       createCategoryModalOpen,
       createPostModalOpen,
+      createCategory,
       editCategoryModalOpen,
       editPostModalOpen,
       deleteCategoryModalOpen,
       deletePostModalOpen,
 
+      newCategory,
       newPost,
+
       submitting,
       createPost
     }  
+  },
+  mounted() {
+    axios.get(import.meta.env.VITE_API_URL+'pages/'+this.$route.params.id)
+    .then((res)=> {
+      this.view = res.data;
+    })
+    axios.get(import.meta.env.VITE_API_URL+'categories/?byPage='+this.$route.params.id)
+    .then((res)=> {
+      this.categories = res.data.results;
+
+      if(this.$route.params.categoryId != null)
+      {
+        axios.get(import.meta.env.VITE_API_URL+'posts/?byCategory='+this.$route.params.id)
+      .then((res)=> {
+      this.posts = res.data.results;
+      })
+      }
+      
+    })
+
+   
+
   }
 }
 </script>

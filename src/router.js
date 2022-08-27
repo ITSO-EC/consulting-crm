@@ -84,7 +84,7 @@ const router = createRouter({
       component: Shop2
     },
     {
-      path: '/ecommerce/workspace',
+      path: '/ecommerce/workspace/:id/:categoryId?',
       component: Workspace
     },
     {

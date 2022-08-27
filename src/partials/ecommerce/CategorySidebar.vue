@@ -6,24 +6,10 @@
         <div>
           <div class="text-sm text-slate-800 font-semibold mb-3">Categorías</div>
           <ul class="text-sm font-medium space-y-2">
-            <li>
-              <a class="text-indigo-500" href="#0">Sector Rural</a>
+            <li v-for="category in categories" :key="'CategoryId-'+category?.id">
+              <router-link class="text-slate-600 hover:text-slate-700" :to="`${$route.params.id}/${category?.id}`">{{category?.name}}</router-link>
             </li>
-            <li>
-              <a class="text-slate-600 hover:text-slate-700" href="#0">Comercial</a>
-            </li>
-            <li>
-              <a class="text-slate-600 hover:text-slate-700" href="#0">Finanzas</a>
-            </li>
-            <li>
-              <a class="text-slate-600 hover:text-slate-700" href="#0">Gestión</a>
-            </li>
-            <li>
-              <a class="text-slate-600 hover:text-slate-700" href="#0">Educación</a>
-            </li>
-            <li>
-              <a class="text-slate-600 hover:text-slate-700" href="#0">Economía</a>
-            </li>
+           
           </ul>
         </div>
       </div>
@@ -34,5 +20,6 @@
 <script>
 export default {
   name: 'ShopSidebar',
+  props: ['categories'],
 }
 </script>

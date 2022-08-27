@@ -2,7 +2,7 @@
   <!-- Card 1 -->
   <div
     v-for="view in views"
-    :key="`ViewCard-${view.id}`"
+    :key="`ViewCard-${view.id}-${busy}`"
     class="
       relative
       col-span-full
@@ -33,15 +33,16 @@
       <h3 class="text-lg text-white font-semibold mt-16 mb-0.5">
         {{view.name}}
       </h3>
-      <a
+      <router-link
         class="text-sm font-medium text-indigo-400 hover:text-indigo-300"
-        :href="view.id"
-        >Ingresar -&gt;</a
+        :to="'/ecommerce/workspace/'+view.id"
+        >Ingresar -&gt;</router-link
       >
     </div>
-    <div class="m-1.5 cursor-pointer absolute right-2 top-2">
+    <div :class="busy? '':'cursor-pointer'" class="m-1.5 absolute right-2 top-2">
       <!-- Start -->
       <div
+        @click="toggleVisibility(view.id)"
         :class="view.status == 'user' ? getVisible : getInvisible"
       >
         {{view.status == 'user'? 'Visible':'Invisible'}}
@@ -53,9 +54,17 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: "ShopCards06",
-  props: ['views'],
+  props: ['xviews'],
+  data() {
+    return {
+      views: this.$props.xviews,
+      busy: false
+    }
+  },
+  emits: ['update-list'],
   computed: {
     getVisible() {
       return "text-xs inline-flex font-medium bg-emerald-100 text-emerald-600 rounded-full text-center px-2.5 py-1"
@@ -64,8 +73,43 @@ export default {
       return "text-xs inline-flex font-medium bg-slate-700 text-slate-100 rounded-full text-center px-2.5 py-1"
     }
   },
+  methods: {
+    toggleVisibility(id) {
+      let state = this.views?.find(view => view.id === id ).status
+      if (state == 'user')
+      {
+        state = 'invisible';
+      }
+      else {
+        state = 'user'
+      }
+      this.updateVisibility(id,state);
+    },
+    updateVisibility(id, newStatus){
+      this.busy = true;
+      axios.patch(import.meta.env.VITE_API_URL+'pages/'+id, 
+        {
+          status: newStatus
+        }
+      ).then((res)=>{
+          const newViews = this.views?.map((view) => {
+              let nview = view.id == id ? {...view, status: res.data.status} : view
+              return nview
+            });
+            
+          this.views = newViews
+          this.$emit('update-list');
+          this.busy = false
+          
+          
+        })
+        .catch((err)=>{ 
+          this.busy = false;
+          console.log(err)
+          });
+    }
+  },
   mounted() {
-    console.log(this.views);
   }
 };
 </script>

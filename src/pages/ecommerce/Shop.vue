@@ -60,7 +60,7 @@
             <div class="mt-8">
               <h2 class="text-xl leading-snug text-slate-800 font-bold mb-5">Vistas</h2>
               <div class="grid grid-cols-12 gap-6">
-                <ShopCards06 :views="views" />
+                <ShopCards06 :xviews="views" @update-list="getViews()" :key="downloading"/>
                 
               </div>
             </div>
@@ -186,6 +186,7 @@ export default {
       image_url: '/src/images/applications-image-18.jpg',
       status: 'user',
     })
+    const downloading = ref(false);
     const submitting= ref(false);
     const sidebarOpen = ref(false)
     const createModalOpen = ref(false);
@@ -218,11 +219,12 @@ export default {
     };
 
     function getViews() {
+      downloading.value = true
       axios.get(import.meta.env.VITE_API_URL+'pages?limit='+limit.value+'&page='+selectedPage.value)
       .then(response => {
-        console.log(response.data);
         views.value = response.data.results;
         totalPages.value = response.data.totalPages;
+        downloading.value = false;
         })
       .catch(error => console.log(error));
     }
@@ -238,7 +240,8 @@ export default {
       selectedPage,
       views,
       createView,
-      submitting
+      submitting,
+      downloading
     }  
   }
 }
