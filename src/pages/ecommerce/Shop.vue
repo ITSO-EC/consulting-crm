@@ -17,28 +17,27 @@
           <div class="mb-5">
 
             <!-- Title -->
-            <h1 class="text-2xl md:text-3xl text-slate-800 font-bold">Contenido 💡</h1>
+            <h1 class="text-2xl md:text-3xl text-slate-800 font-bold">Vistas 💡</h1>
 
           </div>
-
 
           <div class="flex grid grid-cols-1 sm:grid-cols-2">
             
-          <!-- Search form -->
-          <div class="min-w-xl mb-5">
-            <form class="relative w-">
-              <label for="app-search" class="sr-only">Search</label>
-              <input id="app-search" class="form-input w-full pl-9 py-3 focus:border-slate-300" type="search" placeholder="Search…" />
-              <button class="absolute inset-0 right-auto group" type="submit" aria-label="Search">
-                <svg class="w-4 h-4 shrink-0 fill-current text-slate-400 group-hover:text-slate-500 ml-3 mr-2" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M7 14c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7zM7 2C4.243 2 2 4.243 2 7s2.243 5 5 5 5-2.243 5-5-2.243-5-5-5z" />
-                  <path d="M15.707 14.293L13.314 11.9a8.019 8.019 0 01-1.414 1.414l2.393 2.393a.997.997 0 001.414 0 .999.999 0 000-1.414z" />
-                </svg>
-              </button>
-            </form>
-            
-                
-          </div>
+            <!-- Search form -->
+            <div class="min-w-xl mb-5">
+              <form class="relative w-">
+                <label for="app-search" class="sr-only">Search</label>
+                <input id="app-search" class="form-input w-full pl-9 py-3 focus:border-slate-300" type="search" placeholder="Search…" />
+                <button class="absolute inset-0 right-auto group" disabled aria-disabled="true" aria-label="Search">
+                  <svg class="w-4 h-4 shrink-0 fill-current text-slate-400 group-hover:text-slate-500 ml-3 mr-2" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7 14c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7zM7 2C4.243 2 2 4.243 2 7s2.243 5 5 5 5-2.243 5-5-2.243-5-5-5z" />
+                    <path d="M15.707 14.293L13.314 11.9a8.019 8.019 0 01-1.414 1.414l2.393 2.393a.997.997 0 001.414 0 .999.999 0 000-1.414z" />
+                  </svg>
+                </button>
+              </form>
+              
+                  
+            </div>
             <!-- Add order button -->
               <button 
               @click.stop="createModalOpen = true"
@@ -56,12 +55,10 @@
           <div>
 
 
-            <!-- Cards 6 (Trending Now) -->
             <div class="mt-8">
-              <h2 class="text-xl leading-snug text-slate-800 font-bold mb-5">Vistas</h2>
               <div class="grid grid-cols-12 gap-6">
-                <ShopCards06 :xviews="views" @update-list="getViews()" :key="downloading"/>
-                
+                <ViewCards v-if="!loading" :xviews="views" @update-list="getViews()" :key="loading"/>
+                <span v-else>Cargando {{results}}</span>
               </div>
             </div>
 
@@ -89,15 +86,21 @@
           </div>
           <div class="space-y-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
             
-            <div class="flex justify-center sm:col-span-2">
+            <div class="flex justify-center sm:col-span-2"
+            @click="pickFile()"
+             >
              
               <img
-                class="cursor-pointer hover:grayscale ease-in-out duration-300 active:grayscale-0 w-44 h-24"
-                :src="'/src/images/applications-image-18.jpg'"
+                
+                class="cursor-pointer hover:brightness-50 ease-in-out duration-300 active:brightness-100 w-44 h-24"
+                :src="selectedFile"
                 width="120"
                 height="80"
                 :alt="'Foto de la vista'"
               />
+              <form class="hidden" ref="form" action="">
+                <input ref="fileInput" type="file" @input="onSelectedFile" />
+              </form>
             </div>
             <!-- Start -->
             <div>
@@ -113,30 +116,13 @@
                 >Estado</label
               >
               <select id="status" class="form-select" v-model="newPage.status">
-                <option value="user">Visible</option>
-                <option value="admin">Invisible</option>
+                <option value="visible">Visible</option>
+                <option value="invisible">Invisible</option>
               </select>
             </div>
             
 
-            <!-- Select -->
-            <div>
-              <label class="block text-sm font-medium mb-1 mt-2" for="categories"
-                >Categorías</label
-              >
-              <div class="flex h-12 gap-2 items-center justify-cneter">
-                <input id="categories" class="form-input w-full" type="text" /> 
-                <button 
-                class="btn bg-indigo-500 hover:bg-indigo-600 
-                text-white justify-self-start sm:justify-self-end">
-                  <svg class="h-[18px] fill-current opacity-50 shrink-0" viewBox="0 0 16 16">
-                    <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
-                  </svg>
-                  
-                </button>
-              </div>
-             
-            </div>
+           
           </div>
         </div>
       </div>
@@ -168,23 +154,25 @@
 import { onMounted, ref } from 'vue'
 import Sidebar from '../../partials/Sidebar.vue'
 import Header from '../../partials/Header.vue'
-import ShopCards06 from '../../partials/ecommerce/ShopCards06.vue'
+import ViewCards from '../../partials/ecommerce/ViewCards.vue'
 import ModalBasic from '../../components/ModalBasic.vue'
-import axios from 'axios'
 
+import useViews from '../../composables/useViews';
+import axios from 'axios'
+ 
+const PROXY_URL = 'https://cryptic-dawn-02543.herokuapp.com/'
 export default {
   name: 'Shop',
   components: {
     Sidebar,
     Header,
     ModalBasic,
-    ShopCards06,
+    ViewCards,
   },
   setup() {
     const newPage = ref({
       name:'',
-      image_url: '/src/images/applications-image-18.jpg',
-      status: 'user',
+      status: 'visible',
     })
     const downloading = ref(false);
     const submitting= ref(false);
@@ -194,18 +182,20 @@ export default {
     const totalPages = ref(1);
 
     const limit = ref(8);
-    const views = ref([]);
+    const notviews = ref([]);
+    const {views, queriedViews,error, loading, results, page, initializeViews, filterByName} = useViews();
+
 
     function resetData() {
+     
       newPage.value = {
         name:'',
-        image_url: '/src/images/applications-image-18.jpg',
-        status: 'user',
+        status: 'visible',
       }
     }
     function createView() {
         submitting.value = true;
-        axios.post(import.meta.env.VITE_API_URL+'pages', newPage.value)
+        axios.post(PROXY_URL+import.meta.env.VITE_API_URL+'pages', {image_url: selectedFile.value , ...newPage.value})
         .then(response => {
           submitting.value = false
           resetData();
@@ -218,19 +208,50 @@ export default {
         });
     };
 
-    function getViews() {
-      downloading.value = true
-      axios.get(import.meta.env.VITE_API_URL+'pages?limit='+limit.value+'&page='+selectedPage.value)
-      .then(response => {
-        views.value = response.data.results;
-        totalPages.value = response.data.totalPages;
-        downloading.value = false;
-        })
-      .catch(error => console.log(error));
+     function getViews() {
+      initializeViews();
+    //   downloading.value = true
+    //   axios.get(import.meta.env.VITE_API_URL+'pages?limit='+limit.value+'&page='+selectedPage.value)
+    //   .then(response => {
+    //     views.value = response.data.results;
+    //     totalPages.value = response.data.totalPages;
+    //     downloading.value = false;
+    //     })
+    //   .catch(error => console.log(error));
+     }
+
+
+
+
+    //File selector        
+    const selectedFile = ref('/src/images/applications-image-18.jpg');
+    const fileInput = ref(null);
+    const form = ref(null);
+
+    function onSelectedFile() {
+      let file = fileInput.value.files;
+      
+      if (file != null) {
+        let reader = new FileReader();
+        reader.onload = (e) => {
+          selectedFile.value = e.target.result;
+          
+        };
+        reader.readAsDataURL(file[0]);
+      }
     }
 
-    onMounted(()=> {
-      getViews();
+    function pickFile() {
+      fileInput.value.click();
+    }
+
+
+    function deleteFile() {
+      selectedFile.value = null;
+      form.value.reset();
+    }
+    onMounted(async()=> {
+      await initializeViews();
     })
     return {
       newPage,
@@ -239,7 +260,18 @@ export default {
       totalPages,
       selectedPage,
       views,
+
+      selectedFile,
+      fileInput,
+      form,
+      onSelectedFile,
+      pickFile,
+      deleteFile,
+
+      queriedViews,error, loading, results, page, initializeViews, filterByName,
+
       createView,
+      getViews,
       submitting,
       downloading
     }  
