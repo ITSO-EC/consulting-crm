@@ -30,9 +30,9 @@ export const useCategoriesStore = defineStore({
         },
         loadCategories(data) {
            try {
-                this.categories = data.results;
-                this.results = data.totalResults;
-                this.page = data.page;
+                this.categories = data.data.results;
+                this.results = data.data.totalResults;
+                this.page = data.data.page;
            } catch (error) {
                 this.error = error;
                 console.error(error);

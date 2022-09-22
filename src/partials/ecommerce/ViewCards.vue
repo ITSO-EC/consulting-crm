@@ -57,8 +57,10 @@
 
 <script>
 import axios from 'axios'
-
+const fileURL = "https://itso.ga/v1/posts/file/"
+    
 export default {
+  
   name: "ViewCards",
   props: ['xviews'],
   data() {
@@ -69,6 +71,8 @@ export default {
   },
   emits: ['update-list'],
   computed: {
+    
+
     getVisible() {
       return "text-xs inline-flex font-medium bg-emerald-100 text-emerald-600 rounded-full text-center px-2.5 py-1"
     },
@@ -77,13 +81,13 @@ export default {
     }
   },
   methods: {
+   
     getImage(string) {
       
-      const fileURL = "https://itso.ga/v1/posts/file/"
       let imgsource = string.split("/")
       let imageresult = imgsource[imgsource.length -1]
       return fileURL+imageresult;
-    },  
+    } ,
     toggleVisibility(id) {
       let page = this.views?.find(view => view._id === id )
       let name = page.name

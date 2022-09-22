@@ -61,6 +61,7 @@ const router = createRouter({
     },
     {
       path: '/ecommerce/workspace/:id?/:categoryId?',
+      name:'Workspace',
       component: Workspace
     },
 
