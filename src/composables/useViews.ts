@@ -12,9 +12,27 @@ const useViews = () => {
     const initializeViews = async (selpage: number = 1) => {
         viewsStore.toggleLoading(true);
         viewsStore.loadViews(await axios.get(BASE_API+'pages?limit=12&page='+selpage))
-        console.log("listos",viewsStore.views)
         viewsStore.toggleLoading(false);
     };
+
+    const createView = async( payload ) =>{
+        loading.value = true;
+        axios.post(BASE_API+'pages', payload ,{
+          headers: {
+            'Content-type':'multipart/form-data'
+          }
+        })
+        .then(response => {
+          loading.value = false
+          initializeViews()
+        })
+        .catch(error => {
+          loading.value = false
+          console.log(error)
+        });
+    };
+
+
     const getViewById = (id) => viewsStore.getViewById(id);
     const filterByName = (querytext: string)=> viewsStore.filterByValue(querytext);
     return {
@@ -28,6 +46,7 @@ const useViews = () => {
         page,
 
         //methods
+        createView,
         initializeViews,
         filterByName,
         getViewById 

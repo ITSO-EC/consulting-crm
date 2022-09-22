@@ -20,7 +20,7 @@
     <!-- Image -->
     <img
       class="absolute w-full h-full object-cover"
-      :src="view.image_url || '../../images/applications-image-17.jpg'"
+      :src="getImage(view?.image_url)"
       width="286"
       height="160"
       alt="Application 17"
@@ -45,9 +45,9 @@
       <!-- Start -->
       <div
         @click="toggleVisibility(view._id)"
-        :class="view.status == 'visible' ? getVisible : getInvisible"
+        :class="view.isVisible ? getVisible : getInvisible"
       >
-        {{view.status == 'visible'? 'Visible':'Invisible'}}
+        {{view.isVisible? 'Visible':'Invisible'}}
       </div>
       <!-- End -->
     </div>
@@ -57,6 +57,7 @@
 
 <script>
 import axios from 'axios'
+
 export default {
   name: "ViewCards",
   props: ['xviews'],
@@ -76,26 +77,36 @@ export default {
     }
   },
   methods: {
+    getImage(string) {
+      
+      const fileURL = "https://itso.ga/v1/posts/file/"
+      let imgsource = string.split("/")
+      let imageresult = imgsource[imgsource.length -1]
+      return fileURL+imageresult;
+    },  
     toggleVisibility(id) {
-      let state = this.views?.find(view => view._id === id ).status
-      if (state == 'visible')
+      let page = this.views?.find(view => view._id === id )
+      let name = page.name
+      let state = page.isVisible
+      if (state)
       {
-        state = 'invisible';
+        state = 'false';
       }
       else {
-        state = 'visible'
+        state = 'true'
       }
-      this.updateVisibility(id,state);
+      this.updateVisibility(id,name,state);
     },
-    updateVisibility(id, newStatus){
+    updateVisibility(id, oldname,newStatus){
       this.busy = true;
       axios.patch(import.meta.env.VITE_API_URL+'pages/'+id, 
         {
-          status: newStatus
+          name: oldname,
+          isVisible: newStatus
         }
       ).then((res)=>{
           const newViews = this.views?.map((view) => {
-              let nview = view._id == id ? {...view, status: res.data.status} : view
+              let nview = view._id == id ? {...view, isVisible: res.data.isVisible} : view
               return nview
             });
             
@@ -112,7 +123,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.xviews)
   }
 };
 </script>

@@ -31,7 +31,6 @@ export const useViewsStore = defineStore({
             this.selectedView = this.views.find((view) =>  view._id === id);
         },
         filterByValue (text) {
-      
             this.queriedViews = [...this.views];
             let sorted =  this.queriedViews?.filter(o =>
              o["name"]?.toString().toLowerCase().includes(text?.toString().toLowerCase()));
@@ -40,6 +39,7 @@ export const useViewsStore = defineStore({
         loadViews(data) {
             try {   
                 this.views = data.data.results;
+                this.queriedViews = data.data.results;
                 this.results = data.data.totalResults;
                 this.page = data.data.page;
                 

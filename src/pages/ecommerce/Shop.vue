@@ -27,7 +27,7 @@
             <div class="min-w-xl mb-5">
               <form class="relative w-">
                 <label for="app-search" class="sr-only">Search</label>
-                <input id="app-search" class="form-input w-full pl-9 py-3 focus:border-slate-300" type="search" placeholder="Search…" />
+                <input id="app-search" v-model="query" @input="updateQueriedViews()" class="form-input w-full pl-9 py-3 focus:border-slate-300" type="search" placeholder="Search…" />
                 <button class="absolute inset-0 right-auto group" disabled aria-disabled="true" aria-label="Search">
                   <svg class="w-4 h-4 shrink-0 fill-current text-slate-400 group-hover:text-slate-500 ml-3 mr-2" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                     <path d="M7 14c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7zM7 2C4.243 2 2 4.243 2 7s2.243 5 5 5 5-2.243 5-5-2.243-5-5-5z" />
@@ -57,8 +57,14 @@
 
             <div class="mt-8">
               <div class="grid grid-cols-12 gap-6">
-                <ViewCards v-if="!loading" :xviews="views" @update-list="getViews()" :key="loading"/>
-                <span v-else>Cargando {{results}}</span>
+                <ViewCards v-if="!loading" :xviews="queriedViews" @update-list="initializeViews()" :key="loading + queriedViews?.length"/>
+                <div v-else-if="loading" class="col-span-12 mx-auto flex flex-col gap-4 py-12 justify-center items-center inset-0">
+                      <svg class="animate-spin inline-block h-24 w-24 mt-10 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg> 
+                    <span class="text-xl font-bold w-full text-center">Actualizando información</span>
+                </div>
               </div>
             </div>
 
@@ -115,9 +121,9 @@
               <label class="block text-sm font-medium mb-1 mt-2" for="status"
                 >Estado</label
               >
-              <select id="status" class="form-select" v-model="newPage.status">
-                <option value="visible">Visible</option>
-                <option value="invisible">Invisible</option>
+              <select id="status" class="form-select" v-model="newPage.isVisible">
+                <option value="true">Visible</option>
+                <option value="false">Invisible</option>
               </select>
             </div>
             
@@ -140,7 +146,7 @@
           >
             Cancelar
           </button>
-          <button :disabled="submitting" @click="createView" class="btn-sm disabled:bg-indigo-300 bg-indigo-500 hover:bg-indigo-600 text-white">
+          <button :disabled="loading" @click="postCreateForm" class="btn-sm disabled:bg-indigo-300 bg-indigo-500 hover:bg-indigo-600 text-white">
             Guardar
           </button>
         </div>
@@ -158,9 +164,7 @@ import ViewCards from '../../partials/ecommerce/ViewCards.vue'
 import ModalBasic from '../../components/ModalBasic.vue'
 
 import useViews from '../../composables/useViews';
-import axios from 'axios'
  
-const PROXY_URL = 'https://cryptic-dawn-02543.herokuapp.com/'
 export default {
   name: 'Shop',
   components: {
@@ -172,52 +176,33 @@ export default {
   setup() {
     const newPage = ref({
       name:'',
-      status: 'visible',
+      isVisible: 'true',
     })
-    const downloading = ref(false);
-    const submitting= ref(false);
     const sidebarOpen = ref(false)
     const createModalOpen = ref(false);
-    const selectedPage = ref(1);
-    const totalPages = ref(1);
-
-    const limit = ref(8);
-    const notviews = ref([]);
-    const {views, queriedViews,error, loading, results, page, initializeViews, filterByName} = useViews();
 
 
-    function resetData() {
-     
+    const query = ref('');
+    const {views, queriedViews,error, loading, results, page, createView,initializeViews, filterByName} = useViews();
+
+
+    function resetData() {  
+      createModalOpen.value = false;
       newPage.value = {
         name:'',
-        status: 'visible',
+        isVisible: 'false',
       }
+      
+      selectedFile.value ='/src/images/applications-image-18.jpg';
     }
-    function createView() {
-        submitting.value = true;
-        axios.post(PROXY_URL+import.meta.env.VITE_API_URL+'pages', {image_url: selectedFile.value , ...newPage.value})
-        .then(response => {
-          submitting.value = false
-          resetData();
-          getViews();
-        })
-        .catch(error => {
-          submitting.value = false
-          console.log(error)
-          resetData()
-        });
-    };
 
-     function getViews() {
-      initializeViews();
-    //   downloading.value = true
-    //   axios.get(import.meta.env.VITE_API_URL+'pages?limit='+limit.value+'&page='+selectedPage.value)
-    //   .then(response => {
-    //     views.value = response.data.results;
-    //     totalPages.value = response.data.totalPages;
-    //     downloading.value = false;
-    //     })
-    //   .catch(error => console.log(error));
+    function postCreateForm() {
+      createView({image_url: formData, ...newPage.value})
+      resetData();
+    }
+    
+     function updateQueriedViews() {
+      filterByName(query.value);
      }
 
 
@@ -226,8 +211,11 @@ export default {
     //File selector        
     const selectedFile = ref('/src/images/applications-image-18.jpg');
     const fileInput = ref(null);
-    const form = ref(null);
 
+    let formData = new FormData()
+
+
+    const form = ref(null);
     function onSelectedFile() {
       let file = fileInput.value.files;
       
@@ -238,6 +226,9 @@ export default {
           
         };
         reader.readAsDataURL(file[0]);
+        
+        formData =  file[0]
+        
       }
     }
 
@@ -250,15 +241,14 @@ export default {
       selectedFile.value = null;
       form.value.reset();
     }
-    onMounted(async()=> {
-      await initializeViews();
+    onMounted(()=> {
+       initializeViews();
     })
+
     return {
       newPage,
       sidebarOpen,
       createModalOpen,
-      totalPages,
-      selectedPage,
       views,
 
       selectedFile,
@@ -268,12 +258,11 @@ export default {
       pickFile,
       deleteFile,
 
+      query,
       queriedViews,error, loading, results, page, initializeViews, filterByName,
+      updateQueriedViews,
 
-      createView,
-      getViews,
-      submitting,
-      downloading
+      postCreateForm,
     }  
   }
 }
