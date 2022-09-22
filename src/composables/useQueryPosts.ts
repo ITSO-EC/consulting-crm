@@ -1,5 +1,6 @@
+import axios from 'axios';
 import { storeToRefs } from 'pinia';
-import { useQueryPostsStore } from '~~/stores/queryPostsStore'
+import { useQueryPostsStore } from '../stores/queryPostsStore'
 
 const BASE_API='https://itso.ga/v1/'
 
@@ -9,10 +10,12 @@ const useQueryPosts = () => {
     const {posts, selectedPost, error, loading, results, page} = storeToRefs(queryPostsStore);
 
     const initializeAllPosts = async()=>{
-        queryPostsStore.loadPosts(await $fetch(BASE_API+'posts'))
+        loading.value = true;
+        queryPostsStore.loadPosts(await axios.get(BASE_API+'posts'))
+        loading.value = false;
     };
     const initializeQueriedPosts = async(id: string)=>{
-        queryPostsStore.loadPosts(await $fetch(BASE_API+'posts?byCategory='+id))
+        queryPostsStore.loadPosts(await axios.get(BASE_API+'posts?byCategory='+id))
     };
     const selectPostById = (id: string) => queryPostsStore.getPostById(id);
 

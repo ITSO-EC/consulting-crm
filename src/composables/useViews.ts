@@ -10,6 +10,7 @@ const useViews = () => {
     const { views , queriedViews , selectedView , error, loading, results, page} = storeToRefs(viewsStore);
     //'/api/views'
     const initializeViews = async (selpage: number = 1) => {
+      
         viewsStore.toggleLoading(true);
         viewsStore.loadViews(await axios.get(BASE_API+'pages?limit=12&page='+selpage))
         viewsStore.toggleLoading(false);
@@ -33,7 +34,9 @@ const useViews = () => {
     };
 
 
-    const getViewById = (id) => viewsStore.getViewById(id);
+    const getViewById = (id) => {
+      viewsStore.getViewById(id)
+    };
     const filterByName = (querytext: string)=> viewsStore.filterByValue(querytext);
     return {
         // Properties

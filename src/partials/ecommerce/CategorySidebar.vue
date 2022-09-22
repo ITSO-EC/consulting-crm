@@ -17,7 +17,14 @@
           <ul class="text-sm font-medium space-y-2">
             <li v-for="category in categories" :key="'CategoryId-'+category?.id" class="w-full">
             
-              <router-link class="inline-block text-slate-600 hover:text-slate-700 w-full" :to="{name:'Workspace', params:{id: $route.params.id, categoryId: category?._id}}">{{category?.name}}</router-link>
+              <router-link 
+              :class="$route.params.categoryId != null && $route.params.categoryId == category?._id ? ' font-bold text-sky-500': ''"
+              class="inline-block text-slate-600 hover:text-slate-700 w-full" 
+              :to="{name:'Workspace', params:{id: $route.params.id, categoryId: category?._id}}">
+              {{category?.name}}</router-link>
+            </li>
+            <li v-if="categories.length < 1">
+              Sin categorias aún
             </li>
            
           </ul>
@@ -92,8 +99,8 @@
 
     <!-- Edit Category -->
     <ModalBasic
-      :modalOpen="editPostModalOpen"
-      @close-modal="editPostModalOpen = false"
+      :modalOpen="editCategoryModalOpen"
+      @close-modal="editCategoryModalOpen = false"
       title="Editar Operador"
     >
       <!-- Modal content -->

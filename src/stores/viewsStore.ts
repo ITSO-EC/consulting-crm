@@ -28,6 +28,7 @@ export const useViewsStore = defineStore({
     },
     actions: {
         getViewById(id) {
+            
             this.selectedView = this.views.find((view) =>  view._id === id);
         },
         filterByValue (text) {

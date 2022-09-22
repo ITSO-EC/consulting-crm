@@ -28,9 +28,9 @@ export const useQueryPostsStore = defineStore({
         },
         loadPosts(data) {
             try {
-                this.posts = data.results;
-                this.results = data.totalResults;
-                this.page = data.page;
+                this.posts = data.data.results;
+                this.results = data.data.totalResults;
+                this.page = data.data.page;
            } catch (error) {
                 this.error = error;
                 console.error(error);

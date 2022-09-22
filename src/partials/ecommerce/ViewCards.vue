@@ -20,7 +20,7 @@
     <!-- Image -->
     <img
       class="absolute w-full h-full object-cover"
-      :src="getImage(view?.image_url)"
+      :src="getxImage(view?.image_url)"
       width="286"
       height="160"
       alt="Application 17"
@@ -57,6 +57,7 @@
 
 <script>
 import axios from 'axios'
+import getImage from '../../composables/useResources';
 const fileURL = "https://itso.ga/v1/posts/file/"
     
 export default {
@@ -82,12 +83,10 @@ export default {
   },
   methods: {
    
-    getImage(string) {
+     getxImage(string) {
       
-      let imgsource = string.split("/")
-      let imageresult = imgsource[imgsource.length -1]
-      return fileURL+imageresult;
-    } ,
+      return getImage(string);
+     },
     toggleVisibility(id) {
       let page = this.views?.find(view => view._id === id )
       let name = page.name
