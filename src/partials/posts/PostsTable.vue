@@ -305,6 +305,8 @@ import axios from 'axios'
 import useCategories from '../../composables/useCategories';
 import useQueryPosts from '../../composables/useQueryPosts';
 
+
+const PROXY_URL='https://sheltered-dusk-91889.herokuapp.com/'
 const { categories} = useCategories();
 const { posts, selectedPost, error, loading, results, page, initializeAllPosts, initializeQueriedPosts} = useQueryPosts();
 const submitting = ref(false);
@@ -375,7 +377,7 @@ function closeCreateModal() {
     function createPost() {
         submitting.value = true;
 
-        axios.post(import.meta.env.VITE_API_URL+'posts', {...newPost.value, file_url: formData, category: route.params.categoryId,reference:'www.sri.gob.ec'}, {
+        axios.post(PROXY_URL+import.meta.env.VITE_API_URL+'posts', {...newPost.value, file_url: formData, category: route.params.categoryId,reference:'www.sri.gob.ec'}, {
           headers: {
             'Content-type':'multipart/form-data'
           }

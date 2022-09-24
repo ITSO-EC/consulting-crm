@@ -2,6 +2,7 @@ import axios from 'axios';
 import { storeToRefs } from 'pinia';
 import { useCategoriesStore } from '../stores/categoriesStore'
 
+const PROXY_URL='https://sheltered-dusk-91889.herokuapp.com/'
 const BASE_API='https://itso.ga/v1/'
 const useCategories = () => {
     const categoriesStore = useCategoriesStore();
@@ -17,7 +18,7 @@ const useCategories = () => {
     const getCategoryById = (id: string) => categoriesStore.getCategoryById(id);
     const createCategory = async(payload) => {
         loading.value = true;
-        axios.post(BASE_API+'categories', payload)
+        axios.post(PROXY_URL+BASE_API+'categories', payload)
         .then(response => {
         initializeCategories(response.data.page)
         loading.value = false
