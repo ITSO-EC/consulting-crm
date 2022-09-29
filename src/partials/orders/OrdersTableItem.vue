@@ -2,57 +2,22 @@
   <tbody class="text-sm">
     <!-- Row -->
     <tr>
-      <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-px">
-        <div class="flex items-center">
-          <label class="inline-flex">
-            <span class="sr-only">Select</span>
-            <input
-              :id="order.id"
-              class="form-checkbox"
-              type="checkbox"
-              :value="value"
-              @change="check"
-              :checked="checked"
-            />
-          </label>
-        </div>
-      </td>
+     
       <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
         <div class="flex items-center text-slate-800">
-          <div
-            class="
-              w-10
-              h-10
-              shrink-0
-              flex
-              items-center
-              justify-center
-              bg-slate-100
-              rounded-full
-              mr-2
-              sm:mr-3
-            "
-          >
-            <img
-              class="ml-1"
-              :src="order.image"
-              width="20"
-              height="20"
-              :alt="order.order"
-            />
-          </div>
-          <div class="font-medium text-sky-500">{{ order.order }}</div>
+          
+          <div class="font-medium text-sky-500 overflow-hidden text-ellipsis w-12">{{ order._id }}</div>
         </div>
       </td>
       <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-        <div>{{ order.date }}</div>
+        <div>{{ convertDate(order.createdAt) }}</div>
       </td>
       <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-        <div class="font-medium text-slate-800">{{ order.customer }}</div>
+        <div class="font-medium text-slate-800">{{ user.name }}</div>
       </td>
       <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
         <div class="text-left font-medium text-emerald-500">
-          {{ order.total }}
+          [$ ---]
         </div>
       </td>
       <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
@@ -60,35 +25,23 @@
           class="inline-flex font-medium rounded-full text-center px-2.5 py-0.5 cursor-pointer"
           :class="statusColor(order.status)"
         >
-          {{ order.status }}
+          [Estado]
         </div>
       </td>
       <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
         <div class="flex justify-center cursor-pointer">
-          <!-- To download PDF, PNG or JPG -->
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-            />
-          </svg>
+        <a :href="getImage(order.file_url)" target="_blank" rel="noopener noreferrer">
+          <BaseIcon :name="'file'" />
+        </a>
         </div>
       </td>
       <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-        <div class="text-left">{{ order.location }}</div>
+        <div class="text-left">{{user.email}}</div>
       </td>
       <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
         <div class="flex items-center">
           <div v-html="typeIcon(order.type)"></div>
-          <div>{{ order.type }}</div>
+          <div>[Asunto] </div>
         </div>
       </td>
       <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-px">
@@ -131,26 +84,40 @@
     </tr>
   </tbody>
 </template>
+<script setup>
+  import useOrders from "../../composables/useOrders";
+  import useUsers from "../../composables/useUsers";
+  import getImage from "../../composables/useResources"
+  import BaseIcon from "../../components/BaseIcon.vue";
+  import { onMounted } from "vue";
 
-<script>
-import { ref, computed } from "vue";
+  import { ref } from 'vue'
 
-export default {
-  name: "OrdersTableItem",
-  props: ["order", "value", "selected"],
-  setup(props, context) {
-    const checked = computed(() => props.selected.includes(props.value));
+  const user = ref({});
+  const { selectedUser, retrieveUserById, initializeUsers} = useUsers();
+  
+  onMounted(()=>{
+    user.value = retrieveUserById(props.order.user);
+    console.log(user.value);
+  })
 
-    function check() {
-      let updatedSelected = [...props.selected];
-      if (this.checked) {
-        updatedSelected.splice(updatedSelected.indexOf(props.value), 1);
-      } else {
-        updatedSelected.push(props.value);
-      }
-      context.emit("update:selected", updatedSelected);
-    }
+  
 
+  const props = defineProps(['order', 'value'])
+
+  const convertDate = (date) => {
+  const monthNames = ["Ene", "Feb", "Mar", "Abr", "May", "Jun",
+    "Jul", "Ago", "Sep", "Oct", "Nov", "Dic", "Error"
+  ];
+
+
+  date = new Date(date)
+  let dd = date.getDate(); 
+  let mm = date.getMonth();
+  let yyyy = date.getFullYear(); 
+  if(dd<10){dd='0'+dd} 
+  return date = dd+'-'+monthNames[mm]+'-'+yyyy
+}
     const descriptionOpen = ref(false);
 
     const statusColor = (status) => {
@@ -177,13 +144,4 @@ export default {
       }
     };
 
-    return {
-      check,
-      checked,
-      statusColor,
-      typeIcon,
-      descriptionOpen,
-    };
-  },
-};
 </script>

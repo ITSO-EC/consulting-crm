@@ -83,20 +83,10 @@
           </div>
           <div class="space-y-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
             
-            <!-- <div class="flex justify-center sm:col-span-2">
-             
-              <img
-                class="rounded-full cursor-pointer hover:grayscale ease-in-out duration-300 active:grayscale-0"
-                :src="'https://images.unsplash.com/photo-1521245307621-b71069baa546?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'"
-                width="64"
-                height="64"
-                :alt="'Foto de perfil'"
-              />
-            </div> -->
             <!-- Start -->
             <div>
-              <label class="block text-sm font-medium mb-1 mt-2" for="title"
-                >Titulo</label
+              <label class="block text-sm font-medium mb-1 mt-4" for="title"
+                >Nombre de Norma</label
               >
               <input id="title" class="form-input w-full" type="text" v-model="newPost.title"/>
             </div>
@@ -108,27 +98,69 @@
               <input id="ronumber" class="form-input w-full" type="text" v-model="newPost.ro" />
             </div>
 
-            <!-- Start -->
-            <div>
+             <!-- Select -->
+             <div>
               <label class="block text-sm font-medium mb-1" for="legalnorm"
-                >Norma Legal</label
-              >
-              <input id="legalnorm" class="form-input w-full" type="text" v-model="newPost.legal_regulation" />
+                >Tipo de Norma</label>
+              <select id="legalnorm" class="form-select w-full" v-model="newPost.type_reform">
+                <option :value="'Registro Oficial'">
+                  Registro Oficial
+                </option>
+                <option :value="'Suplemento'">
+                  Suplemento
+                </option>
+                <option :value="'Edición Especial'">
+                  Edición Especial
+                </option>
+                <option :value="'Reforma'">
+                  Reforma
+                </option>
+                <option :value="'Boletín'">
+                  Boletín
+                </option>
+
+              </select>
             </div>
+
+            <!-- Start -->
+            <!-- <div>
+              <label class="block text-sm font-medium mb-1" for="legalnorm"
+                >Tipo de Norma</label
+              >
+              <input id="legalnorm" class="form-input w-full" type="text" v-model="newPost.type_reform" />
+            </div> -->
             <!-- Start -->
             <div>
               <label class="block text-sm font-medium mb-1" for="normnum"
-                >Número de norma</label
+                >No. de Norma</label
               >
               <input id="normnum" class="form-input w-full" type="text" v-model="newPost.number" />
             </div>
             <!-- Start -->
-            <div>
-              <label class="block text-sm font-medium mb-1" for="reformtype"
-                >Tipo de Reforma</label
-              >
-              <input id="reformtype" class="form-input w-full" type="text" v-model="newPost.type_reform"/>
+             <!-- Select -->
+             <div>
+              <label class="block text-sm font-medium mb-1" for="type"
+                >Tipo de R.O.</label>
+              <select v-if="newPost.type_reform === 'Suplemento'" id="type" class="form-select w-full" v-model="newPost.type">
+                <option :value="'Primero'">
+                  Primero
+                </option>
+                <option :value="'Segundo'">
+                  Segundo
+                </option>
+                <option :value="'Tercero'">
+                  Tercero
+                </option>
+              </select>
+              <input v-else id="type" class="form-input w-full" type="text" v-model="disabledInput" disabled/>
             </div>
+
+            <!-- <div>
+              <label class="block text-sm font-medium mb-1" for="reformtype"
+                >Tipo de R.O.</label
+              >
+              <input id="reformtype" class="form-input w-full" type="text" v-model="newPost.type"/>
+            </div> -->
             <!-- Start -->
             <div>
               <label class="block text-sm font-medium mb-1" for="description"
@@ -136,24 +168,26 @@
               >
               <input id="description" class="form-input w-full" type="text" v-model="newPost.content"/>
             </div>
-            <!-- Start -->
+            
+             <!-- Select -->
             <div>
               <label class="block text-sm font-medium mb-1" for="reference"
-                >Tipo de Norma</label
-              >
-              <input id="reference" class="form-input w-full" type="text" v-model="newPost.type"/>
-            </div>
-             <!-- Select -->
-            <!-- <div>
-              <label class="block text-sm font-medium mb-1" for="country"
-                >Categoría </label
-              >
-              <select id="country" class="form-select" v-model="newPost.category">
-                <option :value="category.id" v-for="category in categories" :key="`CategorySelect-${category.id}`">
-                  {{category.name}}
+                >Órgano Emisor</label>
+              <select id="reference" class="form-select w-full" v-model="newPost.reference">
+                <option :value="'www.sri.gob.ec'">
+                  SRI
+                </option>
+                <option :value="'www.supercias.gob.ec'">
+                  Supercias
+                </option>
+                <option :value="'www.trabajo.gob.ec'">
+                  Ministerio de Trabajo
+                </option>
+                <option :value="'www.iess.gob.ec'">
+                  IESS
                 </option>
               </select>
-            </div> -->
+            </div>
 
             
             <!-- Start -->
@@ -316,20 +350,27 @@ const props = defineProps(['selectedItems', 'create-button', 'editButton'])
 const emit = defineEmits(['change-selection','close-create'])
 const selectAll = ref(false)
 const selected = ref([])
+
 const newPost = ref({
   status: "user",
   type: "",
   number: "",
   title: "",
   content: "",
-  legal_regulation: "",
+  legal_regulation: "",//Comodin
   image_url: "http",
   status:"pendiente",
-  type_reform: "",
+  type_reform: "Registro Oficial",
+  reference: "www.sri.gob.ec",
       //reference: "6309e58b6310870021f66e05",
   ro: ""
 })
-    
+
+const disabledInput = ref("---");
+watch(
+  disabledInput, (newVal)=>{
+    console.log("cambio")
+})
 //File selector        
 const selectedFile = ref(null);
 const fileInput = ref(null);
@@ -376,8 +417,17 @@ function closeCreateModal() {
     
     function createPost() {
         submitting.value = true;
-
-        axios.post(PROXY_URL+import.meta.env.VITE_API_URL+'posts', {...newPost.value, file_url: formData, category: route.params.categoryId,reference:'www.sri.gob.ec'}, {
+        if(newPost.value.type_reform != 'Suplemento') {
+          newPost.value.type = '---'
+        };
+        
+        axios.post(import.meta.env.VITE_API_URL+'posts', {
+          ...newPost.value, 
+          file_url: formData, 
+          category: route.params.categoryId,
+          legal_regulation:'~~~'
+        }, 
+        {
           headers: {
             'Content-type':'multipart/form-data'
           }

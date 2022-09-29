@@ -145,7 +145,6 @@ import useViews from '../../composables/useViews';
 
 import getImage from '../../composables/useResources';
 
-const fileURL = "https://itso.ga/v1/posts/file/"
 
   
     const createPostButton = ref(false);
