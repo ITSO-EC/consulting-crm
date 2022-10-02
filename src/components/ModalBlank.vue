@@ -38,11 +38,11 @@ export default {
 
     const modalContent = ref(null)
 
-    // close on click outside
-    const clickHandler = ({ target }) => {
-      if (!props.modalOpen || modalContent.value.contains(target)) return
-      emit('close-modal')
-    }
+    // // close on click outside
+    // const clickHandler = ({ target }) => {
+    //   if (!props.modalOpen || modalContent.value.contains(target)) return
+    //   emit('close-modal')
+    // }
 
     // close if the esc key is pressed
     const keyHandler = ({ keyCode }) => {
@@ -51,12 +51,10 @@ export default {
     }
 
     onMounted(() => {
-      document.addEventListener('click', clickHandler)
       document.addEventListener('keydown', keyHandler)
     })
 
     onUnmounted(() => {
-      document.removeEventListener('click', clickHandler)
       document.removeEventListener('keydown', keyHandler)
     })
 

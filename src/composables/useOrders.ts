@@ -23,9 +23,14 @@ const useOrders = () => {
         loading.value = false;
     }
     const getOrderById = (id: string) => ordersStore.getOrderById(id);
+    
     const createOrder = async(payload) => {
         loading.value = true;
-        axios.post(BASE_API+'orders', payload)
+        axios.post(BASE_API+'orders', payload,{
+          headers: {
+            'Content-type':'multipart/form-data'
+          }
+        })
         .then(response => {
         initializeOrders(response.data.page)
         loading.value = false

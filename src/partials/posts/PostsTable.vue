@@ -68,7 +68,7 @@
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
         </svg> 
         <span class="inline-block text-xl font-bold w-full my-4 mt-6 mx-auto text-center mb-10">Actualizando</span>
-      </div>
+    </div>
      <!-- Create Post -->
      <ModalBasic
       :modalOpen="createPostModalOpen"
@@ -216,7 +216,7 @@
           >
             Cancelar
           </button>
-          <button @click="createPost" :disabled="submitting" class="btn-sm disabled:bg-indigo-300 bg-indigo-500 hover:bg-indigo-600 text-white">
+          <button @click="createPost(newPost,formData, $route.params.categoryId)" :disabled="submitting" class="btn-sm disabled:bg-indigo-300 bg-indigo-500 hover:bg-indigo-600 text-white">
             Guardar
           </button>
         </div>
@@ -327,6 +327,7 @@
         </div>
       </div>
     </ModalBasic>
+
   </div>
 </template>
 
@@ -342,7 +343,7 @@ import useQueryPosts from '../../composables/useQueryPosts';
 
 const PROXY_URL='https://sheltered-dusk-91889.herokuapp.com/'
 const { categories} = useCategories();
-const { posts, selectedPost, error, loading, results, page, initializeAllPosts, initializeQueriedPosts} = useQueryPosts();
+const { posts, selectedPost, error, loading, results, page, initializeAllPosts, createPost, initializeQueriedPosts} = useQueryPosts();
 const submitting = ref(false);
 
 const route = useRoute();
@@ -367,10 +368,7 @@ const newPost = ref({
 })
 
 const disabledInput = ref("---");
-watch(
-  disabledInput, (newVal)=>{
-    console.log("cambio")
-})
+
 //File selector        
 const selectedFile = ref(null);
 const fileInput = ref(null);
@@ -389,24 +387,22 @@ function onSelectedFile() {
         reader.readAsDataURL(file[0]);
         
         formData =  file[0]
-        console.log("blob", formData)
       }
     }
 
   
 
 
-function deleteFile() {
+  function deleteFile() {
   selectedFile.value = null;
   form.value.reset();
-}
+  }
 
     
 const createPostModalOpen = ref(props.createButton);
     
 const editPostModalOpen = ref(false);
 
-const deletePostModalOpen = ref(false);
 
     //const posts = ref(props.posts);
 function closeCreateModal() {
@@ -415,35 +411,8 @@ function closeCreateModal() {
    
     
     
-    function createPost() {
-        submitting.value = true;
-        if(newPost.value.type_reform != 'Suplemento') {
-          newPost.value.type = '---'
-        };
-        
-        axios.post(import.meta.env.VITE_API_URL+'posts', {
-          ...newPost.value, 
-          file_url: formData, 
-          category: route.params.categoryId,
-          legal_regulation:'~~~'
-        }, 
-        {
-          headers: {
-            'Content-type':'multipart/form-data'
-          }
-        })
-        .then(response => {
-          submitting.value = false
 
-        })
-        .catch(error => {
-          submitting.value = false
-          console.log("error",error)
-          
-        });
-    };
-
-  initializeQueriedPosts(route.params.categoryId)
+initializeQueriedPosts(route.params.categoryId)
     
    
 </script>

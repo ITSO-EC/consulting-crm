@@ -24,7 +24,7 @@
             <!-- Right: Actions  -->
             <div class="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
               <!-- Delete button -->
-              <DeleteButton :selectedItems="selectedItems" />
+              <!-- <DeleteButton :selectedItems="selectedItems" /> -->
               <!-- Dropdown -->
               <DateSelect />
               <!-- Filter button -->
@@ -41,7 +41,7 @@
           </div>
 
           <!-- Table -->
-          <OrdersTable @change-selection="updateSelectedItems($event)" />
+          <OrdersTable />
 
           <!-- Pagination -->
           <div class="mt-8">
@@ -70,33 +70,33 @@
            
             <!-- Start -->
             <div>
-              <label class="block text-sm font-medium mb-1 mt-2" for="name"
+              <label class="block text-sm font-medium mb-1 mt-2" for="title"
                 >Título</label
               >
-              <input id="name" class="form-input w-full" type="text" />
+              <input v-model="newOrder.title"  id="title" class="form-input w-full" type="text" />
             </div>
             <!-- Start -->
             <div>
-              <label class="block text-sm font-medium mb-1" for="email"
+              <label class="block text-sm font-medium mb-1" for="topic"
                 >Asunto</label
               >
-              <input id="email" class="form-input w-full" type="text" />
+              <input id="topic" class="form-input w-full" type="text" />
             </div>
 
             <!-- Start -->
             <div>
-              <label class="block text-sm font-medium mb-1" for="phrase"
+              <label class="block text-sm font-medium mb-1" for="user"
                 >Nombre Emisor</label
               >
-              <input id="phrase" class="form-input w-full" type="text" />
+              <input v-model="newOrder.user" id="user" class="form-input w-full" type="text" />
             </div>
             
             <!-- Start -->
             <div>
-              <label class="block text-sm font-medium mb-1" for="cellphone"
+              <label class="block text-sm font-medium mb-1" for="email"
                 >Correo Emisor</label
               >
-              <input id="cellphone" class="form-input w-full" type="text" />
+              <input id="email" class="form-input w-full" type="text" />
             </div>
             <!-- Start -->
             <div>
@@ -108,29 +108,29 @@
             
             <!-- Start -->
             <div>
-              <label class="block text-sm font-medium mb-1" for="cellphone"
-                >Mensaje</label
-              >
-              <input id="cellphone" class="form-input w-full" type="text" />
+              <label class="block text-sm font-medium mb-1" for="description">
+                Mensaje
+              </label>
+              <input id="description" class="form-input w-full" type="text" v-model="newOrder.description" />
             </div>
             
             <!-- Start -->
             <div>
-              <label class="block text-sm font-medium mb-1" for="cellphone"
+              <label class="block text-sm font-medium mb-1" for="price"
                 >Cantidad ($USD)</label
               >
-              <input id="cellphone" class="form-input w-full" type="text" placeholder="$##.##"/>
+              <input id="price" class="form-input w-full" type="text" placeholder="$##.##"/>
             </div>
             
 
-            <!-- Select -->
-            <div>
+            <!-- file-->
+            <form ref="form">
               <label class="block text-sm font-medium mb-1" for="file"
                 >Archivo</label
               >
               
-              <input id="file" class="form-input w-full" type="file" />
-            </div>
+              <input ref='fileInput'  @input="onSelectedFile" id="file" class="form-input w-full" type="file" />
+            </form>
           </div>
         </div>
       </div>
@@ -148,7 +148,7 @@
           >
             Cancelar
           </button>
-          <button class="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white">
+          <button @click.stop="createOrder({...newOrder, file_url: formData})" class="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white">
             Guardar
           </button>
         </div>
@@ -157,7 +157,7 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref } from 'vue'
 import Sidebar from '../../partials/Sidebar.vue'
 import Header from '../../partials/Header.vue'
@@ -168,37 +168,42 @@ import OrdersTable from '../../partials/orders/OrdersTable.vue'
 import PaginationClassic from '../../components/PaginationClassic.vue'
 
 import ModalBasic from "../../components/ModalBasic.vue";
+import useOrders from "./../../composables/useOrders";
+
+const newOrder = ref({
+  title: '',
+  description:'',
+  user:'6335071bb6e9b276f4bff423',
+
+})
+const { createOrder } = useOrders();
+const sidebarOpen = ref(false)
+
+const orderModalOpen = ref(false);
+
+const fileInput = ref(null);
+
+    let formData = new FormData()
 
 
-export default {
-  name: 'Orders',
-  components: {
-    Sidebar,
-    Header,
-    DeleteButton,
-    DateSelect,
-    FilterButton,
-    OrdersTable,
-    PaginationClassic,    
-    ModalBasic
-  },
-  setup() {
-
-    const sidebarOpen = ref(false)
-    const selectedItems = ref([])
-    
-    const orderModalOpen = ref(false);
-
-    const updateSelectedItems = (selected) => {
-      selectedItems.value = selected
+    const form = ref(null);
+    function onSelectedFile() {
+      let file = fileInput.value.files;
+      
+      if (file != null) {
+        let reader = new FileReader();
+        reader.onload = (e) => {
+          selectedFile.value = e.target.result;
+          
+        };
+        reader.readAsDataURL(file[0]);
+        
+        formData =  file[0]
+        
+      }
     }
 
-    return {
-      sidebarOpen,
-      selectedItems,
-      updateSelectedItems,
-      orderModalOpen
-    }   
-  }
-}
+
+
+
 </script>
