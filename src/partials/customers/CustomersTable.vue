@@ -41,7 +41,7 @@
           <tbody class="text-sm divide-y divide-slate-200">
             <Customer
               v-for="customer in users"
-              :key="customer._id"
+              :key="customer.id"
               :customer="customer"/>
             
           </tbody>

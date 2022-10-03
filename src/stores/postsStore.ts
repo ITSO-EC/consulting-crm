@@ -49,13 +49,13 @@ export const usePostsStore = defineStore({
         },
         async deletePost(id: number): Promise<void> {
             this.loading = true;
-            this.posts = this.posts.filter((post) => post._id !== id);
+            this.posts = this.posts.filter((post) => post.id !== id);
             await sleep(1000);
             this.loading = false;
         },
         async updatePost(id: number): Promise<void> {
             // this.loading = true;
-            // const post = this.posts.find((post) => post._id === id);
+            // const post = this.posts.find((post) => post.id === id);
 
             // if (post) {
             //     post.done = !post.done;

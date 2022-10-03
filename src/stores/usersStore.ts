@@ -25,7 +25,7 @@ export const useUsersStore = defineStore({
     },
     actions: {
         getUserById(id: string) {
-            this.selectedUser = this.users?.find((user) => user._id == id);
+            this.selectedUser = this.users?.find((user) => user.id == id);
         },
 
         loadUsers(data) {

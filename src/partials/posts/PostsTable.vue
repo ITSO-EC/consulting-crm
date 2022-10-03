@@ -141,7 +141,7 @@
              <div>
               <label class="block text-sm font-medium mb-1" for="type"
                 >Tipo de R.O.</label>
-              <select v-if="newPost.type_reform === 'Suplemento'" id="type" class="form-select w-full" v-model="newPost.type">
+              <select v-if="newPost.type_reform === 'Suplemento'" id="type" class="form-select w-full" v-model="newPost.legal_regulation">
                 <option :value="'Primero'">
                   Primero
                 </option>
@@ -216,7 +216,7 @@
           >
             Cancelar
           </button>
-          <button @click="createPost(newPost,formData, $route.params.categoryId)" :disabled="submitting" class="btn-sm disabled:bg-indigo-300 bg-indigo-500 hover:bg-indigo-600 text-white">
+          <button @click="postCreateForm()" :disabled="submitting" class="btn-sm disabled:bg-indigo-300 bg-indigo-500 hover:bg-indigo-600 text-white">
             Guardar
           </button>
         </div>
@@ -398,7 +398,30 @@ function onSelectedFile() {
   form.value.reset();
   }
 
-    
+  const postCreateForm = () => {
+      createPost({ ...newPost.value, file_url: formData}, route.params.categoryId)
+      resetData();
+    }
+
+  const resetData = () => {  
+      createPostModalOpen.value = false;
+      newPost.value = {
+        status: "",
+        type: "",
+        number: "",
+        title: "",
+        content: "",
+        legal_regulation: "",//Comodin
+        image_url: "",
+        status:"pendiente",
+        type_reform: "Registro Oficial",
+        reference: "www.sri.gob.ec",
+            //reference: "6309e58b6310870021f66e05",
+        ro: ""
+      }
+      
+      selectedFile.value ='/src/images/applications-image-18.jpg';
+    }
 const createPostModalOpen = ref(props.createButton);
     
 const editPostModalOpen = ref(false);

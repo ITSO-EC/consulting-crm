@@ -17,7 +17,7 @@ const useUsers = () => {
     const selectUserById = (id: string) => usersStore.getUserById(id);
 
     const retrieveUserById = (id: string) => {
-      const selectedUserx = users.value?.find((user) => user._id == id);
+      const selectedUserx = users.value?.find((user) => user.id == id);
       return selectedUserx;
     }
 

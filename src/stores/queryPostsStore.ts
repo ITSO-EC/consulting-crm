@@ -23,7 +23,7 @@ export const useQueryPostsStore = defineStore({
     getters: {},
     actions: {
         getPostById(id: string) {
-            this.selectedPost = this.posts?.find((post) => post._id == id);
+            this.selectedPost = this.posts?.find((post) => post.id == id);
             
         },
         loadPosts(data) {

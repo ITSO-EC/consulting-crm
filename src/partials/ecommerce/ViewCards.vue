@@ -2,7 +2,7 @@
  
   <div
     v-for="view in views"
-    :key="`ViewCard-${view._id}-${busy}`"
+    :key="`ViewCard-${view.id}-${busy}`"
     class="
       hover:scale-105
       duration-300
@@ -32,7 +32,7 @@
     ></div>
     <!-- Content -->
     <router-link class="relative h-full p-5 flex flex-col justify-end"
-    :to="'/ecommerce/workspace/'+view._id">
+    :to="'/ecommerce/workspace/'+view.id">
       <h3 class="text-lg text-white font-semibold mt-16 mb-0.5">
         {{view.name}}
       </h3>
@@ -44,7 +44,7 @@
     <div :class="busy? '':'cursor-pointer'" class="m-1.5 absolute right-2 top-2">
       <!-- Start -->
       <div
-        @click="toggleVisibility(view._id)"
+        @click="toggleVisibility(view.id)"
         :class="view.isVisible ? getVisible : getInvisible"
       >
         {{view.isVisible? 'Visible':'Invisible'}}
@@ -88,7 +88,7 @@ export default {
       return getImage(string);
      },
     toggleVisibility(id) {
-      let page = this.views?.find(view => view._id === id )
+      let page = this.views?.find(view => view.id === id )
       let name = page.name
       let state = page.isVisible
       if (state)
@@ -109,7 +109,7 @@ export default {
         }
       ).then((res)=>{
           const newViews = this.views?.map((view) => {
-              let nview = view._id == id ? {...view, isVisible: res.data.isVisible} : view
+              let nview = view.id == id ? {...view, isVisible: res.data.isVisible} : view
               return nview
             });
             

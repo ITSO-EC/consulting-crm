@@ -21,17 +21,16 @@ const useQueryPosts = () => {
     const selectPostById = (id: string) => queryPostsStore.getPostById(id);
 
     
-    const createPost = (newPost:Post, formData:FormData, categoryid:string) => {
+    const createPost = ( payload:Post ,categoryid:string) => {
         loading.value = true;
-        if(newPost.type_reform != 'Suplemento') {
-          newPost.type = '---'
+        if(payload.type_reform != 'Suplemento') {
+          payload.legal_regulation = '---'
         };
-        
+        console.log(payload)
         axios.post(BASE_API+'posts', {
-          ...newPost, 
-          file_url: formData, 
+          ...payload, 
           category: categoryid,
-          legal_regulation:'~~~'
+          type:'pending'
         }, 
         {
           headers: {

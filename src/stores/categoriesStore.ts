@@ -25,7 +25,7 @@ export const useCategoriesStore = defineStore({
     },
     actions: {
         getCategoryById(id: string) {
-            this.selectedCategory = this.categories?.find((category) => category._id == id);
+            this.selectedCategory = this.categories?.find((category) => category.id == id);
             
         },
         loadCategories(data) {

@@ -29,7 +29,7 @@ export const useViewsStore = defineStore({
     actions: {
         getViewById(id) {
             
-            this.selectedView = this.views.find((view) =>  view._id === id);
+            this.selectedView = this.views.find((view) =>  view.id === id);
         },
         filterByValue (text) {
             this.queriedViews = [...this.views];
@@ -61,12 +61,12 @@ export const useViewsStore = defineStore({
         },
         async deleteView(id: number): Promise<void> {
             this.loading = true;
-            this.posts = this.posts.filter((post) => post._id !== id);
+            this.posts = this.posts.filter((post) => post.id !== id);
             this.loading = false;
         },
         async updatePost(id: number): Promise<void> {
             // this.loading = true;
-            // const post = this.posts.find((post) => post._id === id);
+            // const post = this.posts.find((post) => post.id === id);
 
             // if (post) {
             //     post.done = !post.done;

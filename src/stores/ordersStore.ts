@@ -25,7 +25,7 @@ export const useOrdersStore = defineStore({
     },
     actions: {
         getOrderById(id: string) {
-            this.selectedOrder = this.orders?.find((order) => order._id == id);
+            this.selectedOrder = this.orders?.find((order) => order.id == id);
             
         },
         loadOrders(data) {

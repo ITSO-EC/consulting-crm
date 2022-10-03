@@ -18,9 +18,9 @@
             <li v-for="category in categories" :key="'CategoryId-'+category?.id" class="w-full">
             
               <router-link 
-              :class="$route.params.categoryId != null && $route.params.categoryId == category?._id ? ' font-bold text-sky-500': ''"
+              :class="$route.params.categoryId != null && $route.params.categoryId == category?.id ? ' font-bold text-sky-500': ''"
               class="inline-block text-slate-600 hover:text-slate-700 w-full" 
-              :to="{name:'Workspace', params:{id: $route.params.id, categoryId: category?._id}}">
+              :to="{name:'Workspace', params:{id: $route.params.id, categoryId: category?.id}}">
               {{category?.name}}</router-link>
             </li>
             <li v-if="categories.length < 1">

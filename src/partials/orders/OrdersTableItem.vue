@@ -6,7 +6,7 @@
       <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
         <div class="flex items-center text-slate-800">
           
-          <div class="font-medium text-sky-500 overflow-hidden text-ellipsis w-12">{{ order._id }}</div>
+          <div class="font-medium text-sky-500 overflow-hidden text-ellipsis w-12">{{ order.id }}</div>
         </div>
       </td>
       <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">

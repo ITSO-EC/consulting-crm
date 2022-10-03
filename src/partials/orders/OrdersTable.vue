@@ -54,9 +54,9 @@
           <!-- Table body -->
           <Order
             v-for="order in orders"
-            :key="order._id"
+            :key="order.id"
             :order="order"
-            :value="order._id"
+            :value="order.id"
           />
         </table>
         <div v-else class="md:col-span-2 xl:col-span-1">

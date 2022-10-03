@@ -9,13 +9,13 @@
       </div>
     </td> -->
     <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-12 ">
-      <div class="font-medium text-sky-500 w-12 text-ellipsis overflow-hidden">{{post._id}}</div>
+      <div class="font-medium text-sky-500 w-12 text-ellipsis overflow-hidden">{{post.id}}</div>
     </td>
     <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-36">
       <div class="font-medium w-36 text-ellipsis overflow-hidden" :class="totalColor(post.status)">{{post.title}}</div>
     </td>
     <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-1/5">
-      <div @click="changeStatus(post._id, post.status)"
+      <div @click="changeStatus(post.id, post.status)"
         class="inline-flex font-medium rounded-full text-center px-2.5 py-0.5 capitalize"
         :class="statusColor(post.status)">{{post.status}}</div>
     </td>
@@ -87,7 +87,7 @@
           <div class="flex flex-wrap justify-end space-x-2">
             <button class="btn-sm border-slate-200 hover:border-slate-300 text-slate-600"
               @click.stop="deletePostModalOpen = false">Cancelar</button>
-            <button class="btn-sm bg-rose-500 hover:bg-rose-600 text-white" @click.stop="deletePost(post._id, $route.params.categoryId)">Confirmar</button>
+            <button class="btn-sm bg-rose-500 hover:bg-rose-600 text-white" @click.stop="deletePost(post.id, $route.params.categoryId)">Confirmar</button>
           </div>
         </div>
       </div>
