@@ -8,6 +8,7 @@ interface OrdersState {
     error: String;
     results: number;
     page: number;
+    pages: number;
 }
 
 export const useOrdersStore = defineStore({
@@ -19,6 +20,7 @@ export const useOrdersStore = defineStore({
         loading: false,
         results: 0,
         page:1,
+        pages: 1
     }),
     getters: {
         
@@ -33,6 +35,7 @@ export const useOrdersStore = defineStore({
                 this.orders = data.data.results;
                 this.results = data.data.totalResults;
                 this.page = data.data.page;
+                this.pages = data.data.totalPages;
            } catch (error) {
                 this.error = error;
                 console.error(error);

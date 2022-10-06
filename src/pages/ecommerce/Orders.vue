@@ -6,7 +6,7 @@
 
     <!-- Content area -->
     <div class="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-      
+
       <!-- Site header -->
       <Header :sidebarOpen="sidebarOpen" @toggle-sidebar="sidebarOpen = !sidebarOpen" />
 
@@ -30,12 +30,13 @@
               <!-- Filter button -->
               <FilterButton align="right" />
               <!-- Add order button -->
-              <button class="btn bg-indigo-500 hover:bg-indigo-600 text-white">
+              <button @click.stop="orderModalOpen=true" class="btn bg-indigo-500 hover:bg-indigo-600 text-white">
                 <svg class="w-4 h-4 fill-current opacity-50 shrink-0" viewBox="0 0 16 16">
-                  <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
+                  <path
+                    d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
                 </svg>
-                <span class="hidden xs:block ml-2" @click.stop="orderModalOpen=true">Nueva Orden</span>
-              </button>              
+                <span class="hidden xs:block ml-2" >Nueva Orden</span>
+              </button>
             </div>
 
           </div>
@@ -45,20 +46,16 @@
 
           <!-- Pagination -->
           <div class="mt-8">
-            <PaginationClassic />
-          </div>          
+            <PaginationClassic :items="orders.length" :results="results" :type="'orders'"/>
+          </div>
 
         </div>
       </main>
 
-    </div> 
-    
+    </div>
+
     <!-- CreateOrders -->
-    <ModalBasic
-      :modalOpen="orderModalOpen"
-      @close-modal="orderModalOpen = false"
-      title="Crear Órden"
-    >
+    <ModalBasic :modalOpen="orderModalOpen" @close-modal="orderModalOpen = false" title="Crear Órden">
       <!-- Modal content -->
       <div class="px-5 pt-4 pb-1">
         <div class="text-sm">
@@ -66,46 +63,43 @@
             Registre los datos de la orden que desee registrar manualmente.
           </div>
           <div class="space-y-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            
-           
+
+
             <!-- Start -->
             <div>
-              <label class="block text-sm font-medium mb-1 mt-2" for="title"
-                >Título</label
-              >
-              <input v-model="newOrder.title"  id="title" class="form-input w-full" type="text" />
+              <label class="block text-sm font-medium mb-1 mt-2" for="title">Título</label>
+              <input v-model="newOrder.title" id="title" class="form-input w-full" type="text" />
             </div>
             <!-- Start -->
             <div>
-              <label class="block text-sm font-medium mb-1" for="topic"
-                >Asunto</label
-              >
+              <label class="block text-sm font-medium mb-1" for="topic">Asunto</label>
               <input id="topic" class="form-input w-full" type="text" />
+            </div>
+
+
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="user">Nombre Emisor</label>
+              <input v-model="newOrder.user" id="user" class="form-input w-full" type="text" />
             </div>
 
             <!-- Start -->
             <div>
-              <label class="block text-sm font-medium mb-1" for="user"
-                >Nombre Emisor</label
-              >
-              <input v-model="newOrder.user" id="user" class="form-input w-full" type="text" />
-            </div>
-            
-            <!-- Start -->
-            <div>
-              <label class="block text-sm font-medium mb-1" for="email"
-                >Correo Emisor</label
-              >
+              <label class="block text-sm font-medium mb-1" for="email">Correo Emisor</label>
               <input id="email" class="form-input w-full" type="text" />
             </div>
             <!-- Start -->
             <div>
-              <label class="block text-sm font-medium mb-1" for="cellphone"
-                >Celular Emisor</label
-              >
+              <label class="block text-sm font-medium mb-1" for="cellphone">Celular Emisor</label>
               <input id="cellphone" class="form-input w-full" type="text" />
             </div>
-            
+
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="type">Tipo</label>
+              <input id="type" class="form-input w-full" type="text" />
+            </div>
+
             <!-- Start -->
             <div>
               <label class="block text-sm font-medium mb-1" for="description">
@@ -113,23 +107,19 @@
               </label>
               <input id="description" class="form-input w-full" type="text" v-model="newOrder.description" />
             </div>
-            
+
             <!-- Start -->
             <div>
-              <label class="block text-sm font-medium mb-1" for="price"
-                >Cantidad ($USD)</label
-              >
-              <input id="price" class="form-input w-full" type="text" placeholder="$##.##"/>
+              <label class="block text-sm font-medium mb-1" for="price">Cantidad ($USD)</label>
+              <input id="price" class="form-input w-full" type="text" placeholder="$##.##" />
             </div>
-            
+
 
             <!-- file-->
             <form ref="form">
-              <label class="block text-sm font-medium mb-1" for="file"
-                >Archivo</label
-              >
-              
-              <input ref='fileInput'  @input="onSelectedFile" id="file" class="form-input w-full" type="file" />
+              <label class="block text-sm font-medium mb-1" for="file">Archivo</label>
+            
+              <input ref='fileInput' @input="onSelectedFile()" id="file" class="form-input w-full" type="file" />
             </form>
           </div>
         </div>
@@ -137,18 +127,16 @@
       <!-- Modal footer -->
       <div class="px-5 py-4">
         <div class="flex flex-wrap justify-end space-x-2">
-          <button
-            class="
+          <button class="
               btn-sm
               border-slate-200
               hover:border-slate-300
               text-slate-600
-            "
-            @click.stop="orderModalOpen = false"
-          >
+            " @click.stop="orderModalOpen = false">
             Cancelar
           </button>
-          <button @click.stop="createOrder({...newOrder, file_url: formData})" class="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white">
+          <button @click="createOrder({...newOrder})"
+            class="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white">
             Guardar
           </button>
         </div>
@@ -169,39 +157,45 @@ import PaginationClassic from '../../components/PaginationClassic.vue'
 
 import ModalBasic from "../../components/ModalBasic.vue";
 import useOrders from "./../../composables/useOrders";
+import useUsers from "../../composables/useUsers";
 
 const newOrder = ref({
-  title: '',
-  description:'',
-  user:'6335071bb6e9b276f4bff423',
+  title: 'Titulo',
+  description: 'Una description',
+  price: 20,
+  user: '633e50cd1b2f918f140bea75',
+  type: 'subscribed',
+  file_url: ''
 
 })
-const { createOrder } = useOrders();
-const sidebarOpen = ref(false)
+const { orders, results, createOrder } = useOrders();
+const { users, selectedUser, initializeUsers} = useUsers();
 
+const sidebarOpen = ref(false)
 const orderModalOpen = ref(false);
 
+const selectedFile = ref(null);
 const fileInput = ref(null);
+let formData = new FormData()
 
-    let formData = new FormData()
+const form = ref(null);
 
+initializeUsers();
 
-    const form = ref(null);
-    function onSelectedFile() {
-      let file = fileInput.value.files;
-      
-      if (file != null) {
-        let reader = new FileReader();
-        reader.onload = (e) => {
-          selectedFile.value = e.target.result;
-          
-        };
-        reader.readAsDataURL(file[0]);
-        
-        formData =  file[0]
-        
-      }
-    }
+function onSelectedFile() {
+  let file = fileInput.value.files;
+  if (file != null) {
+    let reader = new FileReader();
+    reader.onload = (e) => {
+      selectedFile.value = e.target.result;
+    };
+    
+    reader.readAsDataURL(file[0]);
+    
+    newOrder.value.file_url = file[0]
+
+  }
+}
 
 
 

@@ -24,13 +24,13 @@
             <!-- Right: Actions  -->
             <div class="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
               <!-- Search form -->
-              <SearchForm />
+              <!-- <SearchForm /> -->
               <!-- Add member button -->
-              <button class="btn bg-indigo-500 hover:bg-indigo-600 text-white">
+              <button  @click.stop="registerModalOpen = true" class="btn bg-indigo-500 hover:bg-indigo-600 text-white">
                 <svg class="w-4 h-4 fill-current opacity-50 shrink-0" viewBox="0 0 16 16">
                   <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
                 </svg>
-                <span class="hidden xs:block ml-2" @click.stop="registerModalOpen = true">Agregar Operador</span>
+                <span class="hidden xs:block ml-2">Agregar Operador</span>
               </button>
             </div>            
 
@@ -122,10 +122,10 @@
               <label class="block text-sm font-medium mb-1" for="country"
                 >Rol</label
               >
-              <select id="country" class="form-select" v-model="newUser.role">
-                <option value="user">Creador</option>
-                <option value="admin">Revisor I</option>
-                <option value="admin">Revisor II</option>
+              <select id="country" class="w-full form-select" v-model="newUser.role">
+                <option value="operator">Creador</option>
+                <option value="reviewer_1">Revisor I</option>
+                <option value="reviewer_2">Revisor II</option>
               </select>
             </div>
           </div>
@@ -193,17 +193,7 @@ export default {
     const registerModalOpen = ref(false)
     const submitting = ref(false)
     const users = ref([]);
-    const items = ref([
-      {
-        id: 0,
-        name: 'Dominik McNeail',
-        image: Image01,
-        link: '#0',
-        location: 'Revisor II',
-        content: 'Hola, soy nuevo y tengo muchas ganas de ganar experiencia',
-      },
-     
-    ])
+    
 
     function resetData() {
       newUser.value = {
@@ -222,10 +212,14 @@ export default {
         .then(response => {
           submitting.value = false
           resetData();
+          registerModalOpen.value = false;
+          getUsers();
         })
         .catch(error => {
           submitting.value = false
           console.log(error)
+          
+          registerModalOpen.value = false;
           resetData()
         });
     };

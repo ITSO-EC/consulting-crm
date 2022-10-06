@@ -7,7 +7,7 @@ const useCategories = () => {
     const categoriesStore = useCategoriesStore();
     
     
-    const {categories, selectedCategory,error, loading, results, page} = storeToRefs(categoriesStore);
+    const {categories, selectedCategory,error, loading, results, page, pages} = storeToRefs(categoriesStore);
 
     const initializeCategories = async (id: string) => {
         loading.value = true;
@@ -15,6 +15,7 @@ const useCategories = () => {
         loading.value = false;
     }
     const getCategoryById = (id: string) => categoriesStore.getCategoryById(id);
+    
     const createCategory = async(payload) => {
         loading.value = true;
         axios.post(BASE_API+'categories', payload)
@@ -36,7 +37,7 @@ const useCategories = () => {
         loading,
         results,
         page,
-
+        pages,
         //methods
         createCategory,
         initializeCategories,

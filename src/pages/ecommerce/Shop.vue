@@ -9,7 +9,9 @@
       
       <!-- Site header -->
       <Header :sidebarOpen="sidebarOpen" @toggle-sidebar="sidebarOpen = !sidebarOpen" />
-
+      <Toast :type="'error'" :open="error" @close-toast="error=null; successtoast=false" class="fixed z-40 mt-16 w-1/3">{{error}}</Toast>
+      <Toast :type="'success'" :open="successtoast && !error" @close-toast="successtoast = false" class="fixed z-50 mt-16 w-1/3">Vista Creada Exitosamente</Toast>
+    
       <main>
         <div class="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
 
@@ -71,6 +73,11 @@
 
 
 
+          </div>
+          
+          <!-- Pagination -->
+          <div class="mt-6">
+            <PaginationClassic :items="views.length" :results="results" :type="'views'"/>
           </div>
 
         </div>        
@@ -146,7 +153,7 @@
           >
             Cancelar
           </button>
-          <button :disabled="loading" @click="postCreateForm" class="btn-sm disabled:bg-indigo-300 bg-indigo-500 hover:bg-indigo-600 text-white">
+          <button :disabled="loading" @click="postCreateForm(); triggerSuccess()" class="btn-sm disabled:bg-indigo-300 bg-indigo-500 hover:bg-indigo-600 text-white">
             Guardar
           </button>
         </div>
@@ -162,7 +169,8 @@ import Sidebar from '../../partials/Sidebar.vue'
 import Header from '../../partials/Header.vue'
 import ViewCards from '../../partials/ecommerce/ViewCards.vue'
 import ModalBasic from '../../components/ModalBasic.vue'
-
+import Toast from '../../components/Toast.vue'
+import PaginationClassic from '../../components/PaginationClassic.vue'
 import useViews from '../../composables/useViews';
  
 export default {
@@ -172,12 +180,15 @@ export default {
     Header,
     ModalBasic,
     ViewCards,
+    Toast,
+    PaginationClassic
   },
   setup() {
     const newPage = ref({
       name:'',
       isVisible: 'true',
     })
+    const successtoast = ref(false);
     const sidebarOpen = ref(false)
     const createModalOpen = ref(false);
 
@@ -232,6 +243,9 @@ export default {
       }
     }
 
+    function triggerSuccess() {
+      successtoast.value = true;
+    }
     function pickFile() {
       fileInput.value.click();
     }
@@ -257,11 +271,11 @@ export default {
       onSelectedFile,
       pickFile,
       deleteFile,
-
+      successtoast,
       query,
       queriedViews,error, loading, results, page, initializeViews, filterByName,
       updateQueriedViews,
-
+      triggerSuccess,
       postCreateForm,
     }  
   }

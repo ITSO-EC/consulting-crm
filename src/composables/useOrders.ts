@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { storeToRefs } from 'pinia';
+
+import { Order } from '../interfaces/order';
 import { useOrdersStore } from '../stores/ordersStore';
 
 const BASE_API='https://itso.ga/v1/'
@@ -8,38 +10,70 @@ const useOrders = () => {
     const ordersStore = useOrdersStore();
     
     
-    const {orders, selectedOrder,error, loading, results, page} = storeToRefs(ordersStore);
+    const {orders, selectedOrder,error, loading, results, page, pages} = storeToRefs(ordersStore);
 
 
-    const initializeAllOrders = async () => {
+    const initializeAllOrders = async (page?:number) => {
       loading.value = true;
-      ordersStore.loadOrders(await axios.get(BASE_API+'orders'));
+      if(!page)
+      {
+        ordersStore.loadOrders(await axios.get(BASE_API+'orders'));
+      }
+      else{
+        ordersStore.loadOrders(await axios.get(BASE_API+'orders?page='+page));  
+      }
       loading.value = false;
-  }
-
-    const initializeOrders = async (id: string) => {
-        loading.value = true;
-        ordersStore.loadOrders(await axios.get(BASE_API+'orders?byPage='+id));
-        loading.value = false;
     }
+
+    const nextPage = async (actualpage:number) => {
+      await initializeAllOrders(actualpage+1);
+    }
+    const prevPage = async (actualpage:number) => {
+      await initializeAllOrders(actualpage-1);
+    }
+  
     const getOrderById = (id: string) => ordersStore.getOrderById(id);
     
-    const createOrder = async(payload) => {
-        loading.value = true;
-        axios.post(BASE_API+'orders', payload,{
+    
+    const createOrder = async (payload:Order) => {
+      loading.value = true;
+      
+      try {
+        axios.post(BASE_API+'orders',{...payload},
+        {
           headers: {
             'Content-type':'multipart/form-data'
           }
         })
-        .then(response => {
-        initializeOrders(response.data.page)
-        loading.value = false
-        })
-        .catch(error => {
-          loading.value = false    
-          console.error("error en useOrders",error)  
-        });
-      };
+        loading.value =false;
+        initializeAllOrders(page.value)
+      }
+      catch(err) {
+        console.log("error en useOrders", err);
+        error.value = err;
+        loading.value = false;
+      }
+      
+    };
+
+      const deleteOrder = async (id:string) => {
+        loading.value = true;
+        
+        try {
+          await axios.delete(BASE_API+'orders/'+id);
+          loading.value = false;
+          
+          initializeAllOrders(page.value);
+  
+        } catch (error) {
+          console.error(error)
+          
+          error.value = error;
+          loading.value = false;
+        }
+        
+        
+      }
   
     return {
         // Properties
@@ -49,11 +83,14 @@ const useOrders = () => {
         loading,
         results,
         page,
+        pages,
 
         //methods
         createOrder,
+        nextPage,
+        prevPage,
+        deleteOrder,
         initializeAllOrders,
-        initializeOrders,
         getOrderById 
 
     }

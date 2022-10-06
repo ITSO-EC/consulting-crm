@@ -1,7 +1,7 @@
 <template>
   <div class="bg-white shadow-lg rounded-sm border border-slate-200 relative">
     <header class="px-5 py-4">
-      <h2 class="font-semibold text-slate-800">All Customers <span class="text-slate-400 font-medium">248</span></h2>
+      <h2 class="font-semibold text-slate-800">Clientes <span class="text-slate-400 font-medium">{{results}}</span></h2>
     </header>
     <div>
 
@@ -54,7 +54,7 @@
 <script setup>
   import useUsers from '../../composables/useUsers';
   import Customer from './CustomersTableItem.vue'
-  const {users, initializeUsers} = useUsers();
+  const {users, initializeUsers, results} = useUsers();
 
   initializeUsers();
 </script>

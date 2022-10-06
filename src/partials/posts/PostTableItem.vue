@@ -23,10 +23,10 @@
       <div class="font-medium text-slate-800">{{post.ro}}</div>
     </td>
     <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-1/5">
-      <div class="font-medium w-12 text-ellipsis overflow-hidden">{{post.createdAt}}</div>
+      <div class="font-medium w-auto text-ellipsis overflow-hidden">{{convertDate(post.createdAt)}}</div>
     </td>
     <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-      <div class="font-medium w-12 text-ellipsis overflow-hidden">{{post.updatedAt}}</div>
+      <div class="font-medium w-auto text-ellipsis overflow-hidden">{{convertDate(post.updatedAt)}}</div>
     </td>
     <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
       <div class="flex items-center">
@@ -137,6 +137,20 @@ const statusColor = (status) => {
     default:
       return 'bg-slate-100 text-slate-500 ' + (loading.value ? '' : 'cursor-pointer')
   }
+}
+
+
+const convertDate = (date) => {
+  const monthNames = ["Ene", "Feb", "Mar", "Abr", "May", "Jun",
+  "Jul", "Ago", "Sep", "Oct", "Nov", "Dic", "Error"
+];
+
+  date = new Date(date)
+  let dd = date.getDate(); 
+  let mm = date.getMonth();
+  let yyyy = date.getFullYear(); 
+  if(dd<10){dd='0'+dd} 
+  return date = dd+'-'+monthNames[mm]+'-'+yyyy
 }
 
 const changeStatus = (id, status) => {

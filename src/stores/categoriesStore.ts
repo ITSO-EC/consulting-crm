@@ -8,6 +8,7 @@ interface CategoriesState {
     error: String;
     results: number;
     page: number;
+    pages: number;
 }
 
 export const useCategoriesStore = defineStore({
@@ -19,6 +20,7 @@ export const useCategoriesStore = defineStore({
         loading: false,
         results: 0,
         page:1,
+        pages: 1
     }),
     getters: {
         
@@ -33,6 +35,7 @@ export const useCategoriesStore = defineStore({
                 this.categories = data.data.results;
                 this.results = data.data.totalResults;
                 this.page = data.data.page;
+                this.pages = data.data.totalPages;
            } catch (error) {
                 this.error = error;
                 console.error(error);

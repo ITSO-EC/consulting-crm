@@ -1,12 +1,14 @@
 <template>
   <div :key="loading" class="bg-white shadow-lg rounded-sm border border-slate-200 relative">
+      
     <header class="px-5 py-4">
-      <h2 class="font-semibold text-slate-800">Publicaciones <span class="text-slate-400 font-medium">67</span></h2>
+      <h2 class="font-semibold text-slate-800">Publicaciones <span class="text-slate-400 font-medium">{{results}}</span></h2>
     </header>
     <div v-if="!loading">
 
       <!-- Table -->
       <div class="overflow-x-auto">
+        
         <table class="table-auto w-full">
           <!-- Table header -->
           <thead class="text-xs font-semibold uppercase text-slate-500 bg-slate-50 border-t border-b border-slate-200">
@@ -46,7 +48,7 @@
             </tr>
           </thead>
           <!-- Table body -->
-          <tbody class="text-sm divide-y divide-slate-200">
+          <tbody class="text-sm divide-y divide-slate-200" :key="results" >
             <Post
               v-for="post of posts"
               :key="post.id"
@@ -216,7 +218,7 @@
           >
             Cancelar
           </button>
-          <button @click="postCreateForm()" :disabled="submitting" class="btn-sm disabled:bg-indigo-300 bg-indigo-500 hover:bg-indigo-600 text-white">
+          <button @click=" triggerSuccess() ;createPost({ ...newPost, file_url: formData}, $route.params.categoryId);resetData()" :disabled="submitting" class="btn-sm disabled:bg-indigo-300 bg-indigo-500 hover:bg-indigo-600 text-white">
             Guardar
           </button>
         </div>
@@ -227,84 +229,134 @@
     <!-- Edit Post -->
     <ModalBasic
       :modalOpen="editPostModalOpen"
-      @close-modal="editPostModalOpen = false"
+      @close-modal="closeEditModal()"
       title="Editar Operador"
     >
-      <!-- Modal content -->
-      <div class="px-5 pt-4 pb-1">
+        <!-- Modal content -->
+        <div class="px-5 pt-4 pb-1">
         <div class="text-sm">
           <div class="font-medium text-slate-800 mb-2">
-            Haga click sobre el círculo y elija una foto de perfil.
+            Haga click sobre el círculo y elija una foto apropiada.
           </div>
-          <form class="space-y-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="space-y-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
             
-            <div class="flex justify-center sm:col-span-2">
-             
-              <img
-                class="rounded-full cursor-pointer hover:grayscale ease-in-out duration-300 active:grayscale-0"
-                :src="'https://images.unsplash.com/photo-1521245307621-b71069baa546?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'"
-               width="64"
-                height="64"
-                :alt="'Foto de perfil'"
-              />
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1 mt-4" for="title"
+                >Nombre de Norma</label
+              >
+              <input id="title" class="form-input w-full" type="text" v-model="selectedPost.title"/>
             </div>
             <!-- Start -->
             <div>
-              <label class="block text-sm font-medium mb-1 mt-2" for="ep-name"
-                >Nombre y Apellido</label
+              <label class="block text-sm font-medium mb-1 mt-2" for="ronumber"
+                >Número de R.O.</label
               >
-              <input id="ep-name" class="form-input w-full" type="text" />
-            </div>
-            <!-- Start -->
-            <div>
-              <label class="block text-sm font-medium mb-1 mt-2" for="ep-email"
-                >Correo</label
-              >
-              <input id="ep-email" class="form-input w-full" type="text" />
+              <input id="ronumber" class="form-input w-full" type="text" v-model="selectedPost.ro" />
             </div>
 
-            <!-- Start -->
-            <div>
-              <label class="block text-sm font-medium mb-1" for="ep-phrase"
-                >Breve Descripción</label
-              >
-              <input id="ep-phrase" class="form-input w-full" type="text" />
-            </div>
-            <!-- Start -->
-            <div>
-              <label class="block text-sm font-medium mb-1" for="ep-cellphone"
-                >Celular</label
-              >
-              <input id="ep-cellphone" class="form-input w-full" type="text" />
-            </div>
-
-           
-            <!-- Start -->
-            <div>
-              <label class="block text-sm font-medium mb-1" for="ep-password"
-                >Clave</label
-              >
-              <input id="ep-password" class="form-input w-full" type="password" />
-            </div>
-            <!-- Start -->
-            <div>
-              <label class="block text-sm font-medium mb-1" for="ep-confpassword"
-                >Confirmar Clave</label
-              >
-              <input id="ep-confpassword" class="form-input w-full" type="password" />
-            </div>
              <!-- Select -->
-            <div>
-              <label class="block text-sm font-medium mb-1" for="ep-country"
-                >Rol</label
-              >
-              <select id="ep-country" class="form-select">
-                <option>Creador</option>
-                <option>Revisor I</option>
-                <option>Revisor II</option>
+             <div>
+              <label class="block text-sm font-medium mb-1" for="legalnorm"
+                >Tipo de Norma</label>
+              <select id="legalnorm" class="form-select w-full" v-model="selectedPost.type_reform">
+                <option :value="'Registro Oficial'">
+                  Registro Oficial
+                </option>
+                <option :value="'Suplemento'">
+                  Suplemento
+                </option>
+                <option :value="'Edición Especial'">
+                  Edición Especial
+                </option>
+                <option :value="'Reforma'">
+                  Reforma
+                </option>
+                <option :value="'Boletín'">
+                  Boletín
+                </option>
+
               </select>
             </div>
-          </form>
+
+            <!-- Start -->
+            <!-- <div>
+              <label class="block text-sm font-medium mb-1" for="legalnorm"
+                >Tipo de Norma</label
+              >
+              <input id="legalnorm" class="form-input w-full" type="text" v-model="selectedPost.type_reform" />
+            </div> -->
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="normnum"
+                >No. de Norma</label
+              >
+              <input id="normnum" class="form-input w-full" type="text" v-model="selectedPost.number" />
+            </div>
+            <!-- Start -->
+             <!-- Select -->
+             <div>
+              <label class="block text-sm font-medium mb-1" for="type"
+                >Tipo de R.O.</label>
+              <select v-if="selectedPost.type_reform === 'Suplemento'" id="type" class="form-select w-full" v-model="selectedPost.legal_regulation">
+                <option :value="'Primero'">
+                  Primero
+                </option>
+                <option :value="'Segundo'">
+                  Segundo
+                </option>
+                <option :value="'Tercero'">
+                  Tercero
+                </option>
+              </select>
+              <input v-else id="type" class="form-input w-full" type="text" v-model="disabledInput" disabled/>
+            </div>
+
+            <!-- <div>
+              <label class="block text-sm font-medium mb-1" for="reformtype"
+                >Tipo de R.O.</label
+              >
+              <input id="reformtype" class="form-input w-full" type="text" v-model="selectedPost.type"/>
+            </div> -->
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="description"
+                >Descripción</label
+              >
+              <input id="description" class="form-input w-full" type="text" v-model="selectedPost.content"/>
+            </div>
+            
+             <!-- Select -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="reference"
+                >Órgano Emisor</label>
+              <select id="reference" class="form-select w-full" v-model="selectedPost.reference">
+                <option :value="'www.sri.gob.ec'">
+                  SRI
+                </option>
+                <option :value="'www.supercias.gob.ec'">
+                  Supercias
+                </option>
+                <option :value="'www.trabajo.gob.ec'">
+                  Ministerio de Trabajo
+                </option>
+                <option :value="'www.iess.gob.ec'">
+                  IESS
+                </option>
+              </select>
+            </div>
+
+            
+            <!-- Start -->
+            <div class="sm:col-span-2">
+              <label class="block text-sm font-medium mb-1" for="file"
+                >Archivo Adjunto</label
+              >
+              <form class="w-full" ref="form">
+                <input id="file" class="form-input w-full" type="file" ref="fileInput" @input="onSelectedFile()" />
+              </form>
+            </div>
+          </div>
         </div>
       </div>
       <!-- Modal footer -->
@@ -317,15 +369,16 @@
               hover:border-slate-300
               text-slate-600
             "
-            @click.stop="createPostModalOpen = false"
+            @click.stop="closeEditModal()"
           >
             Cancelar
           </button>
-          <button class="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white">
+          <button @click="resetData()" :disabled="submitting" class="btn-sm disabled:bg-indigo-300 bg-indigo-500 hover:bg-indigo-600 text-white">
             Guardar
           </button>
         </div>
       </div>
+  
     </ModalBasic>
 
   </div>
@@ -340,15 +393,13 @@ import axios from 'axios'
 import useCategories from '../../composables/useCategories';
 import useQueryPosts from '../../composables/useQueryPosts';
 
-
-const PROXY_URL='https://sheltered-dusk-91889.herokuapp.com/'
 const { categories} = useCategories();
 const { posts, selectedPost, error, loading, results, page, initializeAllPosts, createPost, initializeQueriedPosts} = useQueryPosts();
 const submitting = ref(false);
 
 const route = useRoute();
 const props = defineProps(['selectedItems', 'create-button', 'editButton'])
-const emit = defineEmits(['change-selection','close-create'])
+const emit = defineEmits(['change-selection','close-create','trigger-success'])
 const selectAll = ref(false)
 const selected = ref([])
 
@@ -374,6 +425,7 @@ const selectedFile = ref(null);
 const fileInput = ref(null);
 let formData = new FormData()
 
+
 const form = ref(null);
 function onSelectedFile() {
   let file = fileInput.value.files;
@@ -398,13 +450,8 @@ function onSelectedFile() {
   form.value.reset();
   }
 
-  const postCreateForm = () => {
-      createPost({ ...newPost.value, file_url: formData}, route.params.categoryId)
-      resetData();
-    }
-
   const resetData = () => {  
-      createPostModalOpen.value = false;
+      closeCreateModal();
       newPost.value = {
         status: "",
         type: "",
@@ -426,10 +473,16 @@ const createPostModalOpen = ref(props.createButton);
     
 const editPostModalOpen = ref(false);
 
+function triggerSuccess() {
+  emit('trigger-success')
+}
 
     //const posts = ref(props.posts);
 function closeCreateModal() {
   emit('close-create');
+}
+function closeEditModal() {
+  emit('close-edit');
 }
    
     

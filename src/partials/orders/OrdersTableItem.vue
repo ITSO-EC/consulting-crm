@@ -17,21 +17,22 @@
       </td>
       <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
         <div class="text-left font-medium text-emerald-500">
-          [$ ---]
+          ${{order.price}}
         </div>
       </td>
-      <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+      <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap pr-10 w-24">
         <div
           class="inline-flex font-medium rounded-full text-center px-2.5 py-0.5 cursor-pointer"
           :class="statusColor(order.status)"
         >
-          [Estado]
+          Pendiente
         </div>
       </td>
-      <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-        <div class="flex justify-center cursor-pointer">
+      <td class="px-2 first:pl-5 last:pr-5 w-12 py-3 pr-10 whitespace-nowrap">
+        <div class="flex justify-center cursor-pointer w-12">
+        
         <a :href="getImage(order.file_url)" target="_blank" rel="noopener noreferrer">
-          <BaseIcon :name="'file'" />
+          <BaseIcon :name="getFileType() === 'pdf' ? 'file':'photo'" />
         </a>
         </div>
       </td>
@@ -41,11 +42,13 @@
       <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
         <div class="flex items-center">
           <div v-html="typeIcon(order.type)"></div>
-          <div>[Asunto] </div>
+          <div>{{typeText(order.type)}} </div>
         </div>
       </td>
       <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-px">
         <div class="flex items-center">
+          
+          <BaseIcon :name="'trash'" class="cursor-pointer" @click="deleteOrderLocal(order.id)"/>
           <button
             class="text-slate-400 hover:text-slate-500 transform"
             :class="descriptionOpen && 'rotate-180'"
@@ -71,14 +74,21 @@
       role="region"
       :class="!descriptionOpen && 'hidden'"
     >
+      
       <td colspan="10" class="px-2 first:pl-5 last:pr-5 py-3">
+
         <div class="flex items-center bg-slate-50 p-3 -mt-3">
+          
           <svg class="w-4 h-4 shrink-0 fill-current text-slate-400 mr-2">
             <path
               d="M1 16h3c.3 0 .5-.1.7-.3l11-11c.4-.4.4-1 0-1.4l-3-3c-.4-.4-1-.4-1.4 0l-11 11c-.2.2-.3.4-.3.7v3c0 .6.4 1 1 1zm1-3.6l10-10L13.6 4l-10 10H2v-1.6z"
             />
           </svg>
-          <div class="italic">{{ order.description }}</div>
+          
+          <div class="italic">
+            <h1 class="font-bold">{{order.title}}:</h1>
+            {{ order.description }}
+          </div>
         </div>
       </td>
     </tr>
@@ -95,10 +105,10 @@
 
   const user = ref({});
   const { selectedUser, retrieveUserById, initializeUsers} = useUsers();
-  
+  const { deleteOrder } = useOrders();
   onMounted(()=>{
     user.value = retrieveUserById(props.order.user);
-    console.log(user.value);
+    
   })
 
   
@@ -133,7 +143,7 @@
 
     const typeIcon = (type) => {
       switch (type) {
-        case "Renovación":
+        case "subscribed":
           return `<svg class="w-4 h-4 fill-current text-slate-400 shrink-0 mr-2" viewBox="0 0 16 16">
               <path d="M4.3 4.5c1.9-1.9 5.1-1.9 7 0 .7.7 1.2 1.7 1.4 2.7l2-.3c-.2-1.5-.9-2.8-1.9-3.8C10.1.4 5.7.4 2.9 3.1L.7.9 0 7.3l6.4-.7-2.1-2.1zM15.6 8.7l-6.4.7 2.1 2.1c-1.9 1.9-5.1 1.9-7 0-.7-.7-1.2-1.7-1.4-2.7l-2 .3c.2 1.5.9 2.8 1.9 3.8 1.4 1.4 3.1 2 4.9 2 1.8 0 3.6-.7 4.9-2l2.2 2.2.8-6.4z" />
             </svg>`;
@@ -143,5 +153,24 @@
             </svg>`;
       }
     };
+
+    const typeText = (type) => {
+      switch (type) {
+        case "subscribed":
+          return "Suscripción"
+        case "refunded":
+          return "Devolución"
+      }
+    };
+
+    
+  const getFileType = () => {
+    let arr = props.order.file_url.split('.')
+      return arr[arr.length-1]
+  }
+
+    function deleteOrderLocal(id) {
+      deleteOrder(id);
+    }
 
 </script>

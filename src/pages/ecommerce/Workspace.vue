@@ -6,10 +6,12 @@
 
     <!-- Content area -->
     <div class="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-      
+        
       <!-- Site header -->
       <Header :sidebarOpen="sidebarOpen" @toggle-sidebar="sidebarOpen = !sidebarOpen" />
-
+      <Toast :type="'error'" :open="error" @close-toast="error=null" class="fixed z-40 mt-16 w-1/3">{{error.response?.data ? `Error ${error.response.data?.code}: ${error.response.data.message}`:`Unknown Error`}}</Toast>
+      <Toast :type="'success'" :open="successtoast" @close-toast="successtoast = false" class="fixed z-50 mt-16 w-1/3">Post Creado Exitosamente</Toast>
+    
       <main>
         <div class="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
           <div class=" w-full h-44 absolute overflow-y-hidden -my-8 -mx-4 sm:-mx-6 lg:-mx-8 z-0">
@@ -35,7 +37,7 @@
                 appearance-none
                 active:ring-0 focus:ring-0 ring-0
                 border-none
-                " :value="`Últ.Act.: ${selectedView?.updatedAt}`"/>
+                " :value="`Últ.Act.: ${convertDate(selectedView?.updatedAt)}`"/>
                 
               <h3 class="text-md md:text-lg text-slate-600 font-bold mt-4"></h3>
             </div>
@@ -67,19 +69,24 @@
                 <div class="mb-4 sm:mb-0">
                     <ul class="flex flex-wrap -m-1">
                         <li class="m-1">
-                            <button class="inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border border-transparent shadow-sm bg-indigo-500 text-white duration-150 ease-in-out">Todas <span class="ml-1 text-indigo-200">67</span></button>
+                            <button class="inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border border-transparent shadow-sm bg-indigo-500 text-white duration-150 ease-in-out">
+                              Todas <span class="ml-1 text-indigo-200">{{results}}</span></button>
                         </li>
-                        <li class="m-1">
-                            <button class="inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border border-slate-200 hover:border-slate-300 shadow-sm bg-white text-slate-500 duration-150 ease-in-out">Aprobado II <span class="ml-1 text-slate-400">14</span></button>
+                        <li class="m-1" v-if="countApprovedII()">
+                            <button class="inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border border-slate-200 hover:border-slate-300 shadow-sm bg-white text-slate-500 duration-150 ease-in-out">
+                              Aprobado II <span class="ml-1 text-slate-400">{{countApprovedII()}}</span></button>
                         </li>
-                        <li class="m-1">
-                            <button class="inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border border-slate-200 hover:border-slate-300 shadow-sm bg-white text-slate-500 duration-150 ease-in-out">Aprobado I <span class="ml-1 text-slate-400">14</span></button>
+                        <li class="m-1" v-if="countApprovedI()">
+                            <button class="inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border border-slate-200 hover:border-slate-300 shadow-sm bg-white text-slate-500 duration-150 ease-in-out">
+                              Aprobado I <span class="ml-1 text-slate-400">{{countApprovedI()}}</span></button>
                         </li>
-                        <li class="m-1">
-                            <button class="inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border border-slate-200 hover:border-slate-300 shadow-sm bg-white text-slate-500 duration-150 ease-in-out">Pendiente <span class="ml-1 text-slate-400">34</span></button>
+                        <li class="m-1" v-if="countPending()">
+                            <button class="inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border border-slate-200 hover:border-slate-300 shadow-sm bg-white text-slate-500 duration-150 ease-in-out">
+                              Pendiente <span class="ml-1 text-slate-400">{{countPending()}}</span></button>
                         </li>
-                        <li class="m-1">
-                            <button class="inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border border-slate-200 hover:border-slate-300 shadow-sm bg-white text-slate-500 duration-150 ease-in-out">Corregir <span class="ml-1 text-slate-400">19</span></button>
+                        <li class="m-1" v-if="countCorrect()">
+                            <button class="inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border border-slate-200 hover:border-slate-300 shadow-sm bg-white text-slate-500 duration-150 ease-in-out">
+                              Corregir <span class="ml-1 text-slate-400">{{countCorrect()}}</span></button>
                         </li>
                     </ul>
                 </div>
@@ -104,13 +111,13 @@
               <div>
                 
                 <!-- Table -->
-                <PostsTable @close-create="createPostButton = false" @change-selection="updateSelectedItems($event)" :key="createPostButton" :create-button="createPostButton" />
+                <PostsTable @trigger-success="triggerSuccess()" @close-create="createPostButton = false" @change-selection="updateSelectedItems($event)" :key="createPostButton" :create-button="createPostButton" />
 
               </div>
 
               <!-- Pagination -->
               <div class="mt-6">
-                <PaginationClassic />
+                <PaginationClassic :items="posts.length" :results="results" />
               </div>
 
             </div>
@@ -130,6 +137,7 @@
 </template>
 
 <script setup>
+  import Toast from '../../components/Toast.vue'
 import { onMounted, ref, watch } from 'vue'
 import Sidebar from '../../partials/Sidebar.vue'
 import SearchForm from '../../components/SearchForm.vue'
@@ -144,9 +152,12 @@ import { useRouter, useRoute } from 'vue-router'
 import useViews from '../../composables/useViews';
 
 import getImage from '../../composables/useResources';
+import useQueryPosts from '../../composables/useQueryPosts';
 
-
-  
+const { posts, selectedPost, error, loading, results, 
+  page, initializeAllPosts, createPost, initializeQueriedPosts} = useQueryPosts();
+ 
+  const successtoast = ref(false);
     const createPostButton = ref(false);
     const editPostButton = ref(false);
     
@@ -163,9 +174,102 @@ import getImage from '../../composables/useResources';
     const updateSelectedItems = (selected) => {
       selectedItems.value = selected
     }
+    function triggerSuccess() {
+      successtoast.value = true;
+    }
+  const countApprovedII = () => {
+    let initialValue = 0;
+    let totalResult =posts.value.reduce(
+    (total, currentValue, currentIndex, posts) => {
+      
+      
+      if(currentValue.status =='aprobado II') 
+      {  
+        return total+1;
+      }
+      else 
+      {
+        return total      
+      }
+    },
+    initialValue
+    );
+    return totalResult;
+  }
+  const countApprovedI = () => {
+    let initialValue = 0;
+    let totalResult =posts.value.reduce(
+    (total, currentValue, currentIndex, posts) => {
+      
+      
+      if(currentValue.status =='aprobado I') 
+      {  
+        return total+1;
+      }
+      else 
+      {
+        return total      
+      }
+    },
+    initialValue
+    );
+    return totalResult;
+  
+  }
+  const countPending = () => {
+    let initialValue = 0;
+    let totalResult =posts.value.reduce(
+    (total, currentValue, currentIndex, posts) => {
+      
+      
+      if(currentValue.status =='pendiente') 
+      {  
+        return total+1;
+      }
+      else 
+      {
+        return total      
+      }
+    },
+    initialValue
+    );
+    return totalResult;
+  
+  }
+  const countCorrect = () => {
+    let initialValue = 0;
+    let totalResult =posts.value.reduce(
+    (total, currentValue, currentIndex, posts) => {
+      
+      
+      if(currentValue.status =='corregir') 
+      {  
+        return total+1;
+      }
+      else 
+      {
+        return total      
+      }
+    },
+    initialValue
+    );
+    return totalResult;
+  
+  }
 
 
-   
+const convertDate = (date) => {
+  const monthNames = ["Ene", "Feb", "Mar", "Abr", "May", "Jun",
+  "Jul", "Ago", "Sep", "Oct", "Nov", "Dic", "Error"
+];
+
+  date = new Date(date)
+  let dd = date.getDate(); 
+  let mm = date.getMonth();
+  let yyyy = date.getFullYear(); 
+  if(dd<10){dd='0'+dd} 
+  return date = dd+'-'+monthNames[mm]+'-'+yyyy
+} 
     
     watch(
       views, ()=>{

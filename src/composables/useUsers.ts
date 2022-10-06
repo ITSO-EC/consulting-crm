@@ -7,7 +7,7 @@ const useUsers = () => {
     const usersStore = useUsersStore();
     
     
-    const {users, selectedUser,error, loading, results, page} = storeToRefs(usersStore);
+    const {users, selectedUser,error, loading, results, page, pages} = storeToRefs(usersStore);
 
     const initializeUsers = async () => {
         loading.value = true;
@@ -42,6 +42,7 @@ const useUsers = () => {
         loading,
         results,
         page,
+        pages,
 
         //methods
         createUser,

@@ -38,7 +38,7 @@
                 <svg class="w-4 h-4 fill-current opacity-50 shrink-0" viewBox="0 0 16 16">
                   <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
                 </svg>
-                <span class="hidden xs:block ml-2">Add Customer</span>
+                <span class="hidden xs:block ml-2">Añadir Cliente</span>
               </button>     
                        
             </div>
@@ -50,7 +50,7 @@
 
           <!-- Pagination -->
           <div class="mt-8">
-            <PaginationClassic />
+            <PaginationClassic :items="users.length" :results="results"/>
           </div>          
 
         </div>
@@ -62,8 +62,10 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import Sidebar from '../../partials/Sidebar.vue'
+import useOrders from "../../composables/useOrders";
+import useUsers from "../../composables/useUsers";
 import Header from '../../partials/Header.vue'
 import DeleteButton from '../../partials/actions/DeleteButton.vue'
 import DateSelect from '../../components/DateSelect.vue'
@@ -85,15 +87,21 @@ export default {
   setup() {
 
     const sidebarOpen = ref(false)
+    
+    const { users,results } = useUsers();
+    const { orders, initializeAllOrders } = useOrders();
     const selectedItems = ref([])
-
+    initializeAllOrders()
     const updateSelectedItems = (selected) => {
       selectedItems.value = selected
     }
-
     return {
       sidebarOpen,
+      orders,
+      users,
+      results,
       selectedItems,
+      initializeAllOrders,
       updateSelectedItems,
     }  
   }

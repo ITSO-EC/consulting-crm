@@ -10,6 +10,7 @@ interface ViewsState {
     error: String;
     results: number;
     page: number;
+    pages: number
 }
 
 export const useViewsStore = defineStore({
@@ -22,6 +23,7 @@ export const useViewsStore = defineStore({
         loading: false,
         results: 0,
         page:1,
+        pages:1 
     }),
     getters: {
        
@@ -43,6 +45,8 @@ export const useViewsStore = defineStore({
                 this.queriedViews = data.data.results;
                 this.results = data.data.totalResults;
                 this.page = data.data.page;
+                
+                this.pages = data.data.totalPages;
                 
             } catch (error) {
                 console.error(error)
