@@ -190,7 +190,7 @@
       </div>
       <!-- Modal footer -->
       <div class="px-5 py-4">
-        <div class="flex flex-wrap justify-end space-x-2">{{post}}
+        <div class="flex flex-wrap justify-end space-x-2">
           <button
             class="
               btn-sm
