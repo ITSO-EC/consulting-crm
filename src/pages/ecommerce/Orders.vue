@@ -9,7 +9,13 @@
 
       <!-- Site header -->
       <Header :sidebarOpen="sidebarOpen" @toggle-sidebar="sidebarOpen = !sidebarOpen" />
+      <Toast :type="'error'" :open="error?.response" @close-toast="error=null; succestoast = false" 
+      class="fixed z-40 mt-16 w-1/3">{{error?.response?.data != null? error.response?.data?.message :'Error Desconocido'}}</Toast>
 
+      <Toast :type="'success'" :open="!error && succestoast && !loading" 
+      @close-toast="succestoast=false" class="fixed z-40 mt-16 w-1/3">
+      Órden creada exitosamente.</Toast>
+     
       <main>
         <div class="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
 
@@ -126,7 +132,7 @@
             " @click.stop="orderModalOpen = false">
             Cancelar
           </button>
-          <button @click="createOrder({...newOrder})"
+          <button @click="createOrder({...newOrder}); succestoast=true; orderModalOpen=false; resetFile()"
             class="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white">
             Guardar
           </button>
@@ -140,6 +146,7 @@
 import { ref } from 'vue'
 import Sidebar from '../../partials/Sidebar.vue'
 import Header from '../../partials/Header.vue'
+import Toast from '../../components/Toast.vue'
 import DeleteButton from '../../partials/actions/DeleteButton.vue'
 import DateSelect from '../../components/DateSelect.vue'
 import FilterButton from '../../components/DropdownFilter.vue'
@@ -159,7 +166,8 @@ const newOrder = ref({
   file_url: ''
 
 })
-const { orders, results, createOrder,initializeAllOrders } = useOrders();
+const succestoast = ref(false);
+const { orders, results, loading, error,createOrder,initializeAllOrders } = useOrders();
 const { users, selectedUser, initializeUsers} = useUsers();
 
 const sidebarOpen = ref(false)
@@ -189,6 +197,17 @@ function onSelectedFile() {
 }
 
 
-
+function resetFile() {
+    selectedFile.value = null;
+    newOrder.value = {
+      title: 'Titulo',
+      description: 'Una description',
+      price: 20,
+      user: '633e50cd1b2f918f140bea75',
+      type: 'subscribed',
+      file_url: ''
+    }
+    form.value.reset();
+  }
 
 </script>

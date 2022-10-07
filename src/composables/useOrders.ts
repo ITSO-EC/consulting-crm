@@ -19,6 +19,9 @@ const useOrders = () => {
       ordersStore.loadOrders(await axios.get(BASE_API+'orders?page='+page));  
       loading.value = false;
     }
+    const retrieveOrdersByUser = async (userid:string) => {
+      return await axios.get(BASE_API+'orders?user='+ userid +'&limit=100') 
+    }
 
     const nextPage = async (actualpage:number) => {
       await initializeAllOrders(actualpage+1);
@@ -44,7 +47,7 @@ const useOrders = () => {
         initializeAllOrders(page.value)
       }
       catch(err) {
-        console.log("error en useOrders", err);
+       
         error.value = err;
         loading.value = false;
       }
@@ -85,6 +88,7 @@ const useOrders = () => {
         nextPage,
         prevPage,
         deleteOrder,
+        retrieveOrdersByUser,
         initializeAllOrders,
         getOrderById 
 

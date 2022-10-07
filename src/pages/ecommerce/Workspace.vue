@@ -9,8 +9,8 @@
         
       <!-- Site header -->
       <Header :sidebarOpen="sidebarOpen" @toggle-sidebar="sidebarOpen = !sidebarOpen" />
-      <Toast :type="'error'" :open="error" @close-toast="error=null" class="fixed z-40 mt-16 w-1/3">{{error.response?.data ? `Error ${error.response.data?.code}: ${error.response.data.message}`:`Unknown Error`}}</Toast>
-      <Toast :type="'success'" :open="successtoast" @close-toast="successtoast = false" class="fixed z-50 mt-16 w-1/3">Post Creado Exitosamente</Toast>
+      <Toast :type="'error'" :open="error && !loading" @close-toast="error=null; successtoast=false" class="fixed z-40 mt-16 w-1/3">{{error?.response?.data ? `Error ${error.response.data?.code}: ${error.response.data.message}`:`Unknown Error`}}</Toast>
+      <Toast :type="'success'" :open="successtoast && !error && !loading" @close-toast="successtoast = false" class="fixed z-50 mt-16 w-1/3">Post Creado Exitosamente</Toast>
     
       <main>
         <div class="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
@@ -53,24 +53,28 @@
 
           </div>
           <!-- Page content -->
-          <div class="absolute flex flex-col space-y-10 sm:flex-row sm:space-x-6 sm:space-y-0 md:flex-col md:space-x-0 md:space-y-10 xl:flex-row xl:space-x-6 xl:space-y-0 mt-2">
+          <div class="absolute w-full flex flex-col space-y-10 sm:space-x-6 sm:space-y-0 md:flex-col md:space-x-0 md:space-y-10 xl:flex-row xl:space-x-6 xl:space-y-0 mt-2">
 
             
             <!-- Sidebar -->
-            <CategorySidebar/>
+            <CategorySidebar class=" pr-7 sm:pr-16 md:pr-12 lg:pr-16 xl:pr-2"/>
 
             <!-- Content -->
-            <div  v-if="$route.params.categoryId" :key="$route.fullPath">
+            <div  v-if="$route.params.categoryId" :key="$route.fullPath" class="w-full pr-7 sm:pr-16 md:pr-12 lg:pr-16">
 
                   
               <!-- More actions -->
-              <div  class="sm:flex sm:justify-between sm:items-center mb-5">
+              <div  class="sm:flex sm:justify-between sm:items-center mb-5 w-full">
                 <!-- Left side -->
                 <div class="mb-4 sm:mb-0">
                     <ul class="flex flex-wrap -m-1">
-                        <li class="m-1">
+                        <!-- <li class="m-1">
                             <button class="inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border border-transparent shadow-sm bg-indigo-500 text-white duration-150 ease-in-out">
                               Todas <span class="ml-1 text-indigo-200">{{results}}</span></button>
+                        </li> -->
+                        <li class="m-1">
+                            <button class="inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border border-slate-200 hover:border-slate-300 shadow-sm bg-white text-slate-500 duration-150 ease-in-out">
+                              Todas <span class="ml-1 text-slate-400">{{results}}</span></button>
                         </li>
                         <li class="m-1" v-if="countApprovedII()">
                             <button class="inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border border-slate-200 hover:border-slate-300 shadow-sm bg-white text-slate-500 duration-150 ease-in-out">
@@ -93,7 +97,7 @@
                 <!-- Right: Actions  -->
                 <div  class="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
                   <!-- Search form -->
-                  <SearchForm placeholder="Buscar Publicación" />
+                  <!-- <SearchForm placeholder="Buscar Publicación" /> -->
                   <!-- Create post button -->
                   <button 
                   @click.stop="createPostButton = true"
@@ -108,7 +112,7 @@
 
              
               <!-- Cards 1 (Video Courses) -->
-              <div>
+              <div class="sm:-ml-6 md:-ml-0">
                 
                 <!-- Table -->
                 <PostsTable @trigger-success="triggerSuccess()" @close-create="createPostButton = false" @change-selection="updateSelectedItems($event)" :key="createPostButton" :create-button="createPostButton" />
@@ -117,7 +121,7 @@
 
               <!-- Pagination -->
               <div class="mt-6">
-                <PaginationClassic :items="posts.length" :results="results" :type="'posts'"/>
+                <PaginationClassic v-if="results > 9" :items="posts.length" :results="results" :type="'posts'"/>
               </div>
 
             </div>

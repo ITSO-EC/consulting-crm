@@ -48,7 +48,7 @@
       <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-px">
         <div class="flex items-center">
           
-          <BaseIcon :name="'trash'" class="cursor-pointer" @click="deleteOrderLocal(order.id)"/>
+          <!-- <BaseIcon :name="'trash'" class="cursor-pointer" @click="deleteOrderLocal(order.id)"/> -->
           <button
             class="text-slate-400 hover:text-slate-500 transform"
             :class="descriptionOpen && 'rotate-180'"

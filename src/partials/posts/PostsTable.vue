@@ -1,5 +1,5 @@
 <template>
-  <div :key="loading" class="bg-white shadow-lg rounded-sm border border-slate-200 relative">
+  <div :key="loading" class="bg-white shadow-lg w-full rounded-sm border border-slate-200 relative">
       
     <header class="px-5 py-4">
       <h2 class="font-semibold text-slate-800">Publicaciones <span class="text-slate-400 font-medium">{{results}}</span></h2>
@@ -50,6 +50,7 @@
           <!-- Table body -->
           <tbody class="text-sm divide-y divide-slate-200" :key="results" >
             <Post
+              @edit-post="editPostModalOpen=true"
               v-for="post of posts"
               :key="post.id"
               :post="post"
@@ -163,13 +164,7 @@
               >
               <input id="reformtype" class="form-input w-full" type="text" v-model="newPost.type"/>
             </div> -->
-            <!-- Start -->
-            <div>
-              <label class="block text-sm font-medium mb-1" for="description"
-                >Descripción</label
-              >
-              <input id="description" class="form-input w-full" type="text" v-model="newPost.content"/>
-            </div>
+           
             
              <!-- Select -->
             <div>
@@ -191,6 +186,15 @@
               </select>
             </div>
 
+             <!-- Start -->
+             <div class="sm:col-span-2">
+              <label class="block text-sm font-medium mb-1" for="description"
+                >Descripción</label
+              >
+              <textarea id="description" class="form-input w-full h-max" v-model="newPost.content">
+                
+              </textarea>
+            </div>
             
             <!-- Start -->
             <div class="sm:col-span-2">
@@ -225,162 +229,8 @@
       </div>
     </ModalBasic>
     
-   
-    <!-- Edit Post -->
-    <ModalBasic
-      :modalOpen="editPostModalOpen"
-      @close-modal="closeEditModal()"
-      title="Editar Operador"
-    >
-        <!-- Modal content -->
-        <div class="px-5 pt-4 pb-1">
-        <div class="text-sm">
-          <div class="font-medium text-slate-800 mb-2">
-            Haga click sobre el círculo y elija una foto apropiada.
-          </div>
-          <div class="space-y-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            
-            <!-- Start -->
-            <div>
-              <label class="block text-sm font-medium mb-1 mt-4" for="title"
-                >Nombre de Norma</label
-              >
-              <input id="title" class="form-input w-full" type="text" v-model="selectedPost.title"/>
-            </div>
-            <!-- Start -->
-            <div>
-              <label class="block text-sm font-medium mb-1 mt-2" for="ronumber"
-                >Número de R.O.</label
-              >
-              <input id="ronumber" class="form-input w-full" type="text" v-model="selectedPost.ro" />
-            </div>
-
-             <!-- Select -->
-             <div>
-              <label class="block text-sm font-medium mb-1" for="legalnorm"
-                >Tipo de Norma</label>
-              <select id="legalnorm" class="form-select w-full" v-model="selectedPost.type_reform">
-                <option :value="'Registro Oficial'">
-                  Registro Oficial
-                </option>
-                <option :value="'Suplemento'">
-                  Suplemento
-                </option>
-                <option :value="'Edición Especial'">
-                  Edición Especial
-                </option>
-                <option :value="'Reforma'">
-                  Reforma
-                </option>
-                <option :value="'Boletín'">
-                  Boletín
-                </option>
-
-              </select>
-            </div>
-
-            <!-- Start -->
-            <!-- <div>
-              <label class="block text-sm font-medium mb-1" for="legalnorm"
-                >Tipo de Norma</label
-              >
-              <input id="legalnorm" class="form-input w-full" type="text" v-model="selectedPost.type_reform" />
-            </div> -->
-            <!-- Start -->
-            <div>
-              <label class="block text-sm font-medium mb-1" for="normnum"
-                >No. de Norma</label
-              >
-              <input id="normnum" class="form-input w-full" type="text" v-model="selectedPost.number" />
-            </div>
-            <!-- Start -->
-             <!-- Select -->
-             <div>
-              <label class="block text-sm font-medium mb-1" for="type"
-                >Tipo de R.O.</label>
-              <select v-if="selectedPost.type_reform === 'Suplemento'" id="type" class="form-select w-full" v-model="selectedPost.legal_regulation">
-                <option :value="'Primero'">
-                  Primero
-                </option>
-                <option :value="'Segundo'">
-                  Segundo
-                </option>
-                <option :value="'Tercero'">
-                  Tercero
-                </option>
-              </select>
-              <input v-else id="type" class="form-input w-full" type="text" v-model="disabledInput" disabled/>
-            </div>
-
-            <!-- <div>
-              <label class="block text-sm font-medium mb-1" for="reformtype"
-                >Tipo de R.O.</label
-              >
-              <input id="reformtype" class="form-input w-full" type="text" v-model="selectedPost.type"/>
-            </div> -->
-            <!-- Start -->
-            <div>
-              <label class="block text-sm font-medium mb-1" for="description"
-                >Descripción</label
-              >
-              <input id="description" class="form-input w-full" type="text" v-model="selectedPost.content"/>
-            </div>
-            
-             <!-- Select -->
-            <div>
-              <label class="block text-sm font-medium mb-1" for="reference"
-                >Órgano Emisor</label>
-              <select id="reference" class="form-select w-full" v-model="selectedPost.reference">
-                <option :value="'www.sri.gob.ec'">
-                  SRI
-                </option>
-                <option :value="'www.supercias.gob.ec'">
-                  Supercias
-                </option>
-                <option :value="'www.trabajo.gob.ec'">
-                  Ministerio de Trabajo
-                </option>
-                <option :value="'www.iess.gob.ec'">
-                  IESS
-                </option>
-              </select>
-            </div>
-
-            
-            <!-- Start -->
-            <div class="sm:col-span-2">
-              <label class="block text-sm font-medium mb-1" for="file"
-                >Archivo Adjunto</label
-              >
-              <form class="w-full" ref="form">
-                <input id="file" class="form-input w-full" type="file" ref="fileInput" @input="onSelectedFile()" />
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Modal footer -->
-      <div class="px-5 py-4">
-        <div class="flex flex-wrap justify-end space-x-2">
-          <button
-            class="
-              btn-sm
-              border-slate-200
-              hover:border-slate-300
-              text-slate-600
-            "
-            @click.stop="closeEditModal()"
-          >
-            Cancelar
-          </button>
-          <button @click="resetData()" :disabled="submitting" class="btn-sm disabled:bg-indigo-300 bg-indigo-500 hover:bg-indigo-600 text-white">
-            Guardar
-          </button>
-        </div>
-      </div>
-  
-    </ModalBasic>
-
+     
+ 
   </div>
 </template>
 
@@ -396,7 +246,6 @@ import useQueryPosts from '../../composables/useQueryPosts';
 const { categories} = useCategories();
 const { posts, selectedPost, error, loading, results, page, initializeAllPosts, createPost, initializeQueriedPosts} = useQueryPosts();
 const submitting = ref(false);
-
 const route = useRoute();
 const props = defineProps(['selectedItems', 'create-button', 'editButton'])
 const emit = defineEmits(['change-selection','close-create','trigger-success'])
@@ -411,6 +260,7 @@ const newPost = ref({
   content: "",
   legal_regulation: "",//Comodin
   image_url: "http",
+  file_url:'',
   status:"pendiente",
   type_reform: "Registro Oficial",
   reference: "www.sri.gob.ec",
@@ -438,7 +288,7 @@ function onSelectedFile() {
         };
         reader.readAsDataURL(file[0]);
         
-        formData =  file[0]
+        newPost.value.file_url =  file[0]
       }
     }
 
@@ -471,7 +321,6 @@ function onSelectedFile() {
     }
 const createPostModalOpen = ref(props.createButton);
     
-const editPostModalOpen = ref(false);
 
 function triggerSuccess() {
   emit('trigger-success')

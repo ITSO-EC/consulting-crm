@@ -210,7 +210,7 @@ import { defineProps, onMounted,ref } from 'vue';
 import ModalBasic from "../../components/ModalBasic.vue";
 import ModalBlank from '../../components/ModalBlank.vue'
 
-const {orders} = useOrders();
+const {orders, retrieveOrdersByUser} = useOrders();
 const { editUser, deleteUser } = useUsers();
 const props = defineProps(['customer', 'value', 'selected'])
 
@@ -247,14 +247,18 @@ const emits = defineEmits(['edit-customer'])
 const myorders = ref(0)
 const myprice = ref(0)
 const myrefunds = ref(0)
-function filterById() {
-  let neworders = [...orders?.value]
-  neworders.filter(order=>order.user==props.customer.id)
+async function filterById() {
+  let data = await retrieveOrdersByUser(props.customer.id);
+  data = data?.data
+  // let neworders = [...results?.value]
+  // data.results.filter(order=>order.user==props.customer.id)
   
-  let thisorders = neworders.length;
-  let refunds = neworders.reduce((totalValue, currentOrder)=>currentOrder.type=='refunded'? totalValue++ : totalValue, 0)
-  let price = neworders.reduce((totalValue, currentOrder)=>totalValue+currentOrder.price, 0)
+  let thisorders = data.totalResults;
+  let refunds = data.results?.reduce((totalValue, currentOrder)=>currentOrder.type=='refunded'? totalValue + 1 : totalValue, 0)
+  let price = data.results?.reduce((totalValue, currentOrder)=>currentOrder.type=='subscribed'? totalValue+currentOrder.price : totalValue, 0)
   
+  
+
   myprice.value = price;
   myorders.value = thisorders-refunds;
   myrefunds.value = refunds;

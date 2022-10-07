@@ -1,13 +1,5 @@
 <template>
   <tr class="w-full">
-    <!-- <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-px w-fit">
-      <div class="flex items-center">
-        <label class="inline-flex">
-          <span class="sr-only">Select</span>
-          <input :id="post.id" class="form-checkbox" type="checkbox" :value="value" @change="check" :checked="checked" />
-        </label>
-      </div>
-    </td> -->
     <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-12 ">
       <div class="font-medium text-sky-500 w-12 text-ellipsis overflow-hidden">{{post.id}}</div>
     </td>
@@ -35,14 +27,14 @@
     </td>
     <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-px">
       <div class="space-x-1">
-        <button class="text-slate-400 hover:text-slate-500 rounded-full">
+        <button @click.stop="openEdit()" class="text-slate-400 hover:text-slate-500 rounded-full">
           <span class="sr-only">Editar</span>
           <svg class="w-8 h-8 fill-current" viewBox="0 0 32 32">
             <path
               d="M19.7 8.3c-.4-.4-1-.4-1.4 0l-10 10c-.2.2-.3.4-.3.7v4c0 .6.4 1 1 1h4c.3 0 .5-.1.7-.3l10-10c.4-.4.4-1 0-1.4l-4-4zM12.6 22H10v-2.6l6-6 2.6 2.6-6 6zm7.4-7.4L17.4 12l1.6-1.6 2.6 2.6-1.6 1.6z" />
           </svg>
         </button>
-        <button class="text-slate-400 hover:text-slate-500 rounded-full">
+        <button @click.stop="download(getImage(post.file_url))" class="text-slate-400 hover:text-slate-500 rounded-full">
           <span class="sr-only">Descargar</span>
           <svg class="w-8 h-8 fill-current" viewBox="0 0 32 32">
             <path
@@ -59,7 +51,164 @@
         </button>
       </div>
     </td>
+   
+       <!-- Edit Post -->
+    <ModalBasic
+      :modalOpen="editPostModalOpen"
+      @close-modal="closeEditModal()"
+      title="Editar Publicación"
+    >
+       <!-- Modal content -->
+       <div class="px-5 pt-4 pb-1">
+        <div class="text-sm">
+          <div class="font-medium text-slate-800 mb-2">
+            Haga click sobre el círculo y elija una foto apropiada.
+          </div>
+          <div class="space-y-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1 mt-4" for="edit-title"
+                >Nombre de Norma</label
+              >
+              <input id="edit-title" class="form-input w-full" type="text" v-model="newPost.title"/>
+            </div>
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1 mt-2" for="edit-ronumber"
+                >Número de R.O.</label
+              >
+              <input id="edit-ronumber" class="form-input w-full" type="text" v-model="newPost.ro" />
+            </div>
 
+             <!-- Select -->
+             <div>
+              <label class="block text-sm font-medium mb-1" for="edit-legalnorm"
+                >Tipo de Norma</label>
+              <select id="edit-legalnorm" class="form-select w-full" v-model="newPost.type_reform">
+                <option :value="'Registro Oficial'">
+                  Registro Oficial
+                </option>
+                <option :value="'Suplemento'">
+                  Suplemento
+                </option>
+                <option :value="'Edición Especial'">
+                  Edición Especial
+                </option>
+                <option :value="'Reforma'">
+                  Reforma
+                </option>
+                <option :value="'Boletín'">
+                  Boletín
+                </option>
+
+              </select>
+            </div>
+
+            <!-- Start -->
+            <!-- <div>
+              <label class="block text-sm font-medium mb-1" for="edit-legalnorm"
+                >Tipo de Norma</label
+              >
+              <input id="edit-legalnorm" class="form-input w-full" type="text" v-model="newPost.type_reform" />
+            </div> -->
+            <!-- Start -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="edit-normnum"
+                >No. de Norma</label
+              >
+              <input id="edit-normnum" class="form-input w-full" type="text" v-model="newPost.number" />
+            </div>
+            <!-- Start -->
+             <!-- Select -->
+             <div>
+              <label class="block text-sm font-medium mb-1" for="edit-type"
+                >Tipo de R.O.</label>
+              <select v-if="newPost.type_reform === 'Suplemento'" id="edit-type" class="form-select w-full" v-model="newPost.legal_regulation">
+                <option :value="'Primero'">
+                  Primero
+                </option>
+                <option :value="'Segundo'">
+                  Segundo
+                </option>
+                <option :value="'Tercero'">
+                  Tercero
+                </option>
+              </select>
+              <input v-else id="edit-type" class="form-input w-full" type="text" v-model="disabledInput" disabled/>
+            </div>
+
+            <!-- <div>
+              <label class="block text-sm font-medium mb-1" for="edit-reformtype"
+                >Tipo de R.O.</label
+              >
+              <input id="edit-reformtype" class="form-input w-full" type="text" v-model="newPost.type"/>
+            </div> -->
+           
+            
+             <!-- Select -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="edit-reference"
+                >Órgano Emisor</label>
+              <select id="edit-reference" class="form-select w-full" v-model="newPost.reference">
+                <option :value="'www.sri.gob.ec'">
+                  SRI
+                </option>
+                <option :value="'www.supercias.gob.ec'">
+                  Supercias
+                </option>
+                <option :value="'www.trabajo.gob.ec'">
+                  Ministerio de Trabajo
+                </option>
+                <option :value="'www.iess.gob.ec'">
+                  IESS
+                </option>
+              </select>
+            </div>
+
+             <!-- Start -->
+             <div class="sm:col-span-2">
+              <label class="block text-sm font-medium mb-1" for="edit-description"
+                >Descripción</label
+              >
+              <textarea id="edit-description" class="form-input w-full h-max" v-model="newPost.content">
+                
+              </textarea>
+            </div>
+            
+            <!-- Start -->
+            <div class="sm:col-span-2">
+              <label class="block text-sm font-medium mb-1" for="edit-file"
+                >Archivo Adjunto</label
+              >
+              <form class="w-full" ref="form">
+                <input id="edit-file" class="form-input w-full" type="file" ref="fileInput" @input="onSelectedFile()" />
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Modal footer -->
+      <div class="px-5 py-4">
+        <div class="flex flex-wrap justify-end space-x-2">{{post}}
+          <button
+            class="
+              btn-sm
+              border-slate-200
+              hover:border-slate-300
+              text-slate-600
+            "
+            @click.stop="closeEditModal()"
+          >
+            Cancelar
+          </button>
+          <button @click="editPost(newPost, newPost.category)" :disabled="loading" class="btn-sm disabled:bg-indigo-300 bg-indigo-500 hover:bg-indigo-600 text-white">
+            Guardar
+          </button>
+        </div>
+      </div>
+    </ModalBasic>
+  
     <ModalBlank id="delete-post-modal" :modalOpen="deletePostModalOpen" @close-modal="deletePostModalOpen = false">
       <div class="p-5 flex space-x-4">
         <!-- Icon -->
@@ -99,19 +248,66 @@
 import axios from 'axios'
 import { computed, ref } from 'vue'
 import useQueryPosts from '../../composables/useQueryPosts'
+import getImage from '../../composables/useResources'
 import { useRoute } from 'vue-router'
 import ModalBlank from '../../components/ModalBlank.vue'
+import ModalBasic from '../../components/ModalBasic.vue'
 const props = defineProps(['post', 'value', 'selected']);
 
+const editPostModalOpen = ref(false);
 const deletePostModalOpen = ref(false);
 
+const newPost = ref({...props.post})
 const checked = computed(() => props.selected.includes(props.value))
 const route = useRoute()
-const { error, loading, initializeQueriedPosts,deletePost } = useQueryPosts();
+const { error, loading, initializeQueriedPosts, editPost, deletePost } = useQueryPosts();
 
 function openDelete() {
   deletePostModalOpen.value = true;
 }
+
+const openEdit = () => {
+  editPostModalOpen.value = true;
+}
+
+
+const download = (url) => {
+  const a = document.createElement('a')
+  a.href = url
+  
+  document.body.appendChild(a)
+
+  a.download = url.split('/').pop()
+  a.click()
+  document.body.removeChild(a)
+}
+
+const disabledInput = ref("---");
+
+//File selector        
+const selectedFile = ref(null);
+const fileInput = ref(null);
+let formData = new FormData()
+
+
+const form = ref(null);
+function onSelectedFile() {
+  let file = fileInput.value.files;
+      
+      if (file != null) {
+        let reader = new FileReader();
+        reader.onload = (e) => {
+          selectedFile.value = e.target.result;
+         
+        };
+        reader.readAsDataURL(file[0]);
+        
+        newPost.value.file_url =  file[0]
+      }
+    }
+
+  
+
 
 const totalColor = (status) => {
   switch (status) {
@@ -152,6 +348,11 @@ const convertDate = (date) => {
   if(dd<10){dd='0'+dd} 
   return date = dd+'-'+monthNames[mm]+'-'+yyyy
 }
+
+const closeEditModal=() =>{
+  editPostModalOpen.value = false;
+}
+
 
 const changeStatus = (id, status) => {
   if (loading.value) return;

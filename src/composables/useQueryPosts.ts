@@ -16,11 +16,13 @@ const useQueryPosts = () => {
         loading.value = false;
     };
     const initializeQueriedPosts = async(id: string, page:number=1)=>{
+      loading.value = true;
         queryPostsStore.loadPosts(await axios.get(BASE_API+'posts?byCategory='+id+'&page='+page, {
           headers: {
             'Content-type':'application/json'
           }
         }))
+        loading.value = false;
     };
     const selectPostById = (id: string) => queryPostsStore.getPostById(id);
 
@@ -37,7 +39,7 @@ const useQueryPosts = () => {
         };
         
         try {  
-            axios.post(BASE_API+'posts', {
+            await axios.post(BASE_API+'posts', {
               ...payload, 
               category: categoryid,
               type:'pending'
@@ -54,11 +56,42 @@ const useQueryPosts = () => {
         } catch (err) {
           loading.value = false;
           error.value = err;
-          console.log("MIerror",err)
+         //console.log("MIerror",err)
           
         }
         
     };
+
+    const editPost = async ( payload:Post,categoryid:string) => {
+      loading.value = true;
+      if(payload.type_reform != 'Suplemento') {
+        payload.legal_regulation = '---'
+      };
+      
+      try {  
+        console.log("payload",payload)
+          await axios.patch(BASE_API+'posts/'+payload.id, {
+            ...payload, 
+            category: categoryid,
+            type:'pending'
+          }, 
+          {
+            headers: {
+              'Content-type':'multipart/form-data',
+
+            }
+          })
+        loading.value = false;
+        //initializeQueriedPosts(categoryid);
+
+      } catch (err) {
+        loading.value = false;
+        error.value = err;
+       console.log("MIerror",err)
+        
+      }
+      
+  };
 
     const deletePost = async (id:string, catid:string) => {
       loading.value = true;
@@ -91,6 +124,7 @@ const useQueryPosts = () => {
 
         //methods
         createPost,
+        editPost,
         deletePost,
         nextPage,
         prevPage,
