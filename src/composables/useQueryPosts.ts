@@ -15,8 +15,8 @@ const useQueryPosts = () => {
         queryPostsStore.loadPosts(await axios.get(BASE_API+'posts'))
         loading.value = false;
     };
-    const initializeQueriedPosts = async(id: string)=>{
-        queryPostsStore.loadPosts(await axios.get(BASE_API+'posts?byCategory='+id, {
+    const initializeQueriedPosts = async(id: string, page:number=1)=>{
+        queryPostsStore.loadPosts(await axios.get(BASE_API+'posts?byCategory='+id+'&page='+page, {
           headers: {
             'Content-type':'application/json'
           }
@@ -24,7 +24,12 @@ const useQueryPosts = () => {
     };
     const selectPostById = (id: string) => queryPostsStore.getPostById(id);
 
-    
+    const nextPage = async (actualpage:number, catid: string) => {
+      await initializeQueriedPosts(catid,actualpage+1);
+    }
+    const prevPage = async (actualpage:number, catid:string) => {
+      await initializeQueriedPosts(catid,actualpage-1);
+    }
     const createPost = async ( payload:Post ,categoryid:string) => {
         loading.value = true;
         if(payload.type_reform != 'Suplemento') {
@@ -87,6 +92,8 @@ const useQueryPosts = () => {
         //methods
         createPost,
         deletePost,
+        nextPage,
+        prevPage,
         initializeAllPosts,
         initializeQueriedPosts,
         selectPostById

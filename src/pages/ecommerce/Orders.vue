@@ -1,5 +1,5 @@
 <template>
-  <div class="flex h-screen overflow-hidden">
+  <div class="flex h-screen overflow-hidden" :key="orders.length">
 
     <!-- Sidebar -->
     <Sidebar :sidebarOpen="sidebarOpen" @close-sidebar="sidebarOpen = false" />
@@ -26,9 +26,9 @@
               <!-- Delete button -->
               <!-- <DeleteButton :selectedItems="selectedItems" /> -->
               <!-- Dropdown -->
-              <DateSelect />
+              <!-- <DateSelect /> -->
               <!-- Filter button -->
-              <FilterButton align="right" />
+              <!-- <FilterButton align="right" /> -->
               <!-- Add order button -->
               <button @click.stop="orderModalOpen=true" class="btn bg-indigo-500 hover:bg-indigo-600 text-white">
                 <svg class="w-4 h-4 fill-current opacity-50 shrink-0" viewBox="0 0 16 16">
@@ -70,34 +70,25 @@
               <label class="block text-sm font-medium mb-1 mt-2" for="title">Título</label>
               <input v-model="newOrder.title" id="title" class="form-input w-full" type="text" />
             </div>
-            <!-- Start -->
-            <div>
-              <label class="block text-sm font-medium mb-1" for="topic">Asunto</label>
-              <input id="topic" class="form-input w-full" type="text" />
-            </div>
+           
 
 
             <!-- Start -->
             <div>
-              <label class="block text-sm font-medium mb-1" for="user">Nombre Emisor</label>
+              <label class="block text-sm font-medium mb-1" for="user">Id Emisor</label>
               <input v-model="newOrder.user" id="user" class="form-input w-full" type="text" />
             </div>
 
-            <!-- Start -->
-            <div>
-              <label class="block text-sm font-medium mb-1" for="email">Correo Emisor</label>
-              <input id="email" class="form-input w-full" type="text" />
-            </div>
-            <!-- Start -->
-            <div>
-              <label class="block text-sm font-medium mb-1" for="cellphone">Celular Emisor</label>
-              <input id="cellphone" class="form-input w-full" type="text" />
-            </div>
-
+            
+           
             <!-- Start -->
             <div>
               <label class="block text-sm font-medium mb-1" for="type">Tipo</label>
-              <input id="type" class="form-input w-full" type="text" />
+              <select id="type" class="form-select w-full" v-model="newOrder.type">
+                <option value="subscribed">Suscripcion</option>
+                <option value="refunded">Reclamo</option>  
+              </select>
+
             </div>
 
             <!-- Start -->
@@ -111,7 +102,7 @@
             <!-- Start -->
             <div>
               <label class="block text-sm font-medium mb-1" for="price">Cantidad ($USD)</label>
-              <input id="price" class="form-input w-full" type="text" placeholder="$##.##" />
+              <input id="price" class="form-input w-full" type="text" placeholder="$##.##" v-model="newOrder.price"/>
             </div>
 
 
@@ -168,7 +159,7 @@ const newOrder = ref({
   file_url: ''
 
 })
-const { orders, results, createOrder } = useOrders();
+const { orders, results, createOrder,initializeAllOrders } = useOrders();
 const { users, selectedUser, initializeUsers} = useUsers();
 
 const sidebarOpen = ref(false)

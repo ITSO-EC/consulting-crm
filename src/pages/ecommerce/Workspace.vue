@@ -117,7 +117,7 @@
 
               <!-- Pagination -->
               <div class="mt-6">
-                <PaginationClassic :items="posts.length" :results="results" />
+                <PaginationClassic :items="posts.length" :results="results" :type="'posts'"/>
               </div>
 
             </div>

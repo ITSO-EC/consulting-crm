@@ -9,11 +9,19 @@ const useCategories = () => {
     
     const {categories, selectedCategory,error, loading, results, page, pages} = storeToRefs(categoriesStore);
 
-    const initializeCategories = async (id: string) => {
+    const initializeCategories = async (id: string,page: number =1) => {
         loading.value = true;
-        categoriesStore.loadCategories(await axios.get(BASE_API+'categories?byPage='+id));
+        categoriesStore.loadCategories(await axios.get(BASE_API+'categories?byPage='+id+'&page='+page));
         loading.value = false;
     }
+    
+    const nextPage = async (category:string,actualpage:number) => {
+      await initializeCategories(category,actualpage+1);
+    }
+    const prevPage = async (category:string,actualpage:number) => {
+      await initializeCategories(category,actualpage-1);
+    }
+
     const getCategoryById = (id: string) => categoriesStore.getCategoryById(id);
     
     const createCategory = async(payload) => {
@@ -40,6 +48,8 @@ const useCategories = () => {
         pages,
         //methods
         createCategory,
+        nextPage,
+        prevPage,
         initializeCategories,
         getCategoryById 
 

@@ -10,11 +10,19 @@ const useUsers = () => {
     
     const {users, selectedUser,error, loading, results, page, pages} = storeToRefs(usersStore);
 
-    const initializeUsers = async () => {
+    const initializeUsers = async (page:number=1) => {
         loading.value = true;
-        usersStore.loadUsers(await axios.get(BASE_API+'users'));
+        usersStore.loadUsers(await axios.get(BASE_API+'users?page='+page));
         loading.value = false;
     }
+
+    const nextPage = async (actualpage:number) => {
+      await initializeUsers(actualpage+1);
+    }
+    const prevPage = async (actualpage:number) => {
+      await initializeUsers(actualpage-1);
+    }
+
     const selectUserById = (id: string) => usersStore.getUserById(id);
 
     const retrieveUserById = (id: string) => {
@@ -75,6 +83,8 @@ const useUsers = () => {
         pages,
 
         //methods
+        nextPage,
+        prevPage,
         createUser,
         editUser,
         deleteUser,

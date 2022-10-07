@@ -13,15 +13,10 @@ const useOrders = () => {
     const {orders, selectedOrder,error, loading, results, page, pages} = storeToRefs(ordersStore);
 
 
-    const initializeAllOrders = async (page?:number) => {
+    const initializeAllOrders = async (page:number=1) => {
       loading.value = true;
-      if(!page)
-      {
-        ordersStore.loadOrders(await axios.get(BASE_API+'orders'));
-      }
-      else{
-        ordersStore.loadOrders(await axios.get(BASE_API+'orders?page='+page));  
-      }
+
+      ordersStore.loadOrders(await axios.get(BASE_API+'orders?page='+page));  
       loading.value = false;
     }
 
@@ -39,13 +34,13 @@ const useOrders = () => {
       loading.value = true;
       
       try {
-        axios.post(BASE_API+'orders',{...payload},
+        await axios.post(BASE_API+'orders',{...payload},
         {
           headers: {
             'Content-type':'multipart/form-data'
           }
         })
-        loading.value =false;
+        loading.value = false;
         initializeAllOrders(page.value)
       }
       catch(err) {

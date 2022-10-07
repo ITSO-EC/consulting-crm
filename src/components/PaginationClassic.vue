@@ -62,17 +62,50 @@
     }
     if (props.type == 'users')
     {    
-      const {pages, page} = useUsers();
+      const {loading, pages,page,nextPage} = useUsers();
+      if(page.value < pages.value) 
+      {
+        
+        availableprev.value = true;
+        localpage.value = page.value + 1;
+        nextPage(page.value);
+        if(localpage.value+1 > pages.value){ 
+          availablenext.value=false;
+        }
+      }
+      
       return;
     }  
     if (props.type == 'posts')
     {    
-      const {pages, page} = useQueryPosts();
+      const {posts,loading, pages,page,nextPage} = useQueryPosts();
+      if(page.value < pages.value) 
+      {
+        
+        availableprev.value = true;
+        localpage.value = page.value + 1;
+        nextPage(page.value, posts.value[0].category);
+        if(localpage.value+1 > pages.value){ 
+          availablenext.value=false;
+        }
+      }
+      
       return;
     }
     if (props.type == 'categories')
     {    
-      const {pages, page} = useCategories();
+      const {categories,loading, pages,page,nextPage} = useCategories();
+      if(page.value < pages.value) 
+      {
+        
+        availableprev.value = true;
+        localpage.value = page.value + 1;
+        nextPage(categories.value[0].page ,page.value);
+        if(localpage.value+1 > pages.value){ 
+          availablenext.value=false;
+        }
+      }
+      
       return;
     }  
     if (props.type == 'views')
@@ -112,17 +145,47 @@
     }
     if (props.type == 'users')
     {    
-      const {pages, page} = useUsers();
+      const {loading, page,prevPage} = useUsers();
+      if(page.value > 1) 
+      {
+        availablenext.value = true;
+        localpage.value = page.value - 1;
+        prevPage(page.value);
+        if(localpage.value-1 < 1){ 
+          availableprev.value=false;
+        }
+      }
+      
       return;
     }  
     if (props.type == 'posts')
     {    
-      const {pages, page} = useQueryPosts();
+      const {loading, page,prevPage} = useQueryPosts();
+      if(page.value > 1) 
+      {
+        availablenext.value = true;
+        localpage.value = page.value - 1;
+        prevPage(page.value, posts.value[0].category);
+        if(localpage.value-1 < 1){ 
+          availableprev.value=false;
+        }
+      }
+      
       return;
     }
     if (props.type == 'categories')
     {    
-      const {pages, page} = useCategories();
+      const {categories,loading, page,prevPage} = useCategories();
+      if(page.value > 1) 
+      {
+        availablenext.value = true;
+        localpage.value = page.value - 1;
+        prevPage(categories.value[0].page,page.value);
+        if(localpage.value-1 < 1){ 
+          availableprev.value=false;
+        }
+      }
+      
       return;
     }  
     if (props.type == 'views')
