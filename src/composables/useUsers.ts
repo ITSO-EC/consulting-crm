@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { User } from '../interfaces/user'
 import { storeToRefs } from 'pinia';
 import { useUsersStore } from '../stores/usersStore'
 
@@ -21,16 +22,45 @@ const useUsers = () => {
       return selectedUserx;
     }
 
-    const createUser = async(payload) => {
+    const createUser = async(payload:User) => {
         loading.value = true;
-        axios.post(BASE_API+'users', payload)
+        try {
+          axios.post(BASE_API+'users', payload);
+          initializeUsers()
+          loading.value=false;
+        } catch (error) {
+          error.value = error;
+          loading.value=false;
+        }
+        
+      
+      };
+
+      const editUser = async(payload:User, id:string) => {
+        loading.value = true;
+        try {
+          await axios.patch(BASE_API+'users/'+id, payload)
+          loading.value = false;
+          initializeUsers();
+        }
+        catch(err) {
+          error.value = err.response.data.message;
+          loading.value = false;
+          
+          initializeUsers()
+        }
+       };
+  
+      const deleteUser = async(id:string) => {
+        loading.value = true;
+        axios.delete(BASE_API+'users/'+id)
         .then(response => {
         initializeUsers()
         loading.value = false
         })
-        .catch(error => {
+        .catch(err => {
           loading.value = false    
-          console.error("error en useUsers",error)  
+          error.value = err.response.data.message;
         });
       };
   
@@ -46,6 +76,8 @@ const useUsers = () => {
 
         //methods
         createUser,
+        editUser,
+        deleteUser,
         retrieveUserById,
         initializeUsers,
         selectUserById 
