@@ -183,80 +183,95 @@ const { posts, selectedPost, error, loading, results,
     }
   const countApprovedII = () => {
     let initialValue = 0;
-    let totalResult =posts.value.reduce(
-    (total, currentValue, currentIndex, posts) => {
-      
-      
-      if(currentValue.status =='aprobado II') 
-      {  
-        return total+1;
-      }
-      else 
-      {
-        return total      
-      }
-    },
-    initialValue
-    );
+    let totalResult = 0;
+    if(posts.value) {
+      totalResult = posts?.value?.reduce(
+      (total, currentValue, currentIndex, posts) => {
+          if(currentValue.status =='aprobado II') 
+          {  
+            return total+1;
+          }
+          else 
+          {
+            return total      
+          }
+        },
+      initialValue
+      );
+    }
+    
     return totalResult;
   }
   const countApprovedI = () => {
     let initialValue = 0;
-    let totalResult =posts.value.reduce(
-    (total, currentValue, currentIndex, posts) => {
-      
-      
-      if(currentValue.status =='aprobado I') 
-      {  
-        return total+1;
-      }
-      else 
-      {
-        return total      
-      }
-    },
-    initialValue
-    );
+    let totalResult = 0;
+    
+    if(posts.value) 
+    {
+      totalResult = posts.value.reduce(
+      (total, currentValue, currentIndex, posts) => {
+        
+        
+        if(currentValue.status =='aprobado I') 
+        {  
+          return total+1;
+        }
+        else 
+        {
+          return total      
+        }
+      },
+      initialValue
+      );
+    }
     return totalResult;
   
   }
   const countPending = () => {
     let initialValue = 0;
-    let totalResult =posts.value.reduce(
-    (total, currentValue, currentIndex, posts) => {
-      
-      
-      if(currentValue.status =='pendiente') 
-      {  
-        return total+1;
-      }
-      else 
-      {
-        return total      
-      }
-    },
-    initialValue
-    );
+    let totalResult = 0;
+    if(posts.value)
+    {
+      totalResult = posts.value.reduce(
+      (total, currentValue, currentIndex, posts) => {
+        
+        
+        if(currentValue.status =='pendiente') 
+        {  
+          return total+1;
+        }
+        else 
+        {
+          return total      
+        }
+      },
+      initialValue
+      );
+  }
     return totalResult;
   
   }
   const countCorrect = () => {
     let initialValue = 0;
-    let totalResult =posts.value.reduce(
-    (total, currentValue, currentIndex, posts) => {
-      
-      
-      if(currentValue.status =='corregir') 
-      {  
-        return total+1;
-      }
-      else 
-      {
-        return total      
-      }
-    },
-    initialValue
-    );
+    let totalResult = 0;
+    if(posts.value)
+    {
+      totalResult = posts.value.reduce(
+      (total, currentValue, currentIndex, posts) => {
+        
+        
+        if(currentValue.status =='corregir') 
+        {  
+          return total+1;
+        }
+        else 
+        {
+          return total      
+        }
+      },
+      initialValue
+      );
+    }
     return totalResult;
   
   }

@@ -48,7 +48,7 @@
             </tr>
           </thead>
           <!-- Table body -->
-          <tbody class="text-sm divide-y divide-slate-200" :key="results" >
+          <tbody class="text-sm divide-y divide-slate-200" :key="results " >
             <Post
               @edit-post="editPostModalOpen=true"
               v-for="post of posts"
@@ -57,7 +57,8 @@
               v-model:selected="selected"
               :value="post.id"
             />
-            <div v-if="posts.length < 1" class="p-5 py-8 w-12">
+            
+            <div v-if="results==0" class="p-5 py-8 w-12">
               <span class="absolute -mt-2">No hay posts registrados aún en esta categoría.</span>
             </div>
           </tbody>
@@ -222,7 +223,7 @@
           >
             Cancelar
           </button>
-          <button @click=" triggerSuccess() ;createPost({ ...newPost, file_url: formData}, $route.params.categoryId);resetData()" :disabled="submitting" class="btn-sm disabled:bg-indigo-300 bg-indigo-500 hover:bg-indigo-600 text-white">
+          <button @click=" triggerSuccess() ;createPost({ ...newPost}, $route.params.categoryId);resetData()" :disabled="submitting" class="btn-sm disabled:bg-indigo-300 bg-indigo-500 hover:bg-indigo-600 text-white">
             Guardar
           </button>
         </div>

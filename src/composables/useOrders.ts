@@ -15,7 +15,6 @@ const useOrders = () => {
 
     const initializeAllOrders = async (page:number=1) => {
       loading.value = true;
-
       ordersStore.loadOrders(await axios.get(BASE_API+'orders?page='+page));  
       loading.value = false;
     }

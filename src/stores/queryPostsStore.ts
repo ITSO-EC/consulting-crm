@@ -35,6 +35,7 @@ export const useQueryPostsStore = defineStore({
                 this.page = data.data.page;
                 
                 this.pages = data.data.totalPages;
+                
            } catch (error) {
                 this.error = error;
                 console.error(error);

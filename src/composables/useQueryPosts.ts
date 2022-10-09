@@ -17,12 +17,20 @@ const useQueryPosts = () => {
     };
     const initializeQueriedPosts = async(id: string, page:number=1)=>{
       loading.value = true;
-        queryPostsStore.loadPosts(await axios.get(BASE_API+'posts?byCategory='+id+'&page='+page, {
-          headers: {
-            'Content-type':'application/json'
-          }
-        }))
+
+      try {
+        queryPostsStore.loadPosts(await axios.get(BASE_API+'posts?byCategory='+id+'&page='+page))
+        if(posts.value ==undefined)
+        {
+          posts.value = [];
+          results.value = 0;
+        }
         loading.value = false;
+      } catch (err) {
+        error.value = err;
+        loading.value = false;
+      } 
+        
     };
     const selectPostById = (id: string) => queryPostsStore.getPostById(id);
 
@@ -47,12 +55,10 @@ const useQueryPosts = () => {
             {
               headers: {
                 'Content-type':'multipart/form-data',
-
               }
             })
           loading.value = false;
-          //initializeQueriedPosts(categoryid);
-
+          await initializeQueriedPosts(categoryid);
         } catch (err) {
           loading.value = false;
           error.value = err;
