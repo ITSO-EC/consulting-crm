@@ -47,11 +47,11 @@ const useQueryPosts = () => {
         };
         
         try {  
-            await axios.post(BASE_API+'posts', JSON.stringify({
+            await axios.post(BASE_API+'posts', {
               ...payload, 
               category: categoryid,
               type:'pending'
-            }), 
+            }, 
             {
               headers: {
                 'Content-type':'multipart/form-data',
