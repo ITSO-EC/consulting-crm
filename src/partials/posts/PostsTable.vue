@@ -348,13 +348,29 @@ const institutions = ref(
       name: 'Instituto Nacional de Economía Popular y Solidaria'
     },
     {
-      value: 'www.bioseguridadgalapagos.gob.ec',
-      name: 'Agencia de Bioseguridad Galápagos'
+      value: 'www.agricultura.gob.ec',
+      name: 'Ministerio de Agricultura y Ganadería'
     },
     {
-      value: 'www.bioseguridadgalapagos.gob.ec',
-      name: 'Agencia de Bioseguridad Galápagos'
+      value: 'www.uafe.gob.ec',
+      name: 'Unidad de Análisis Financiero y Económico'
     },
+    {
+      value: 'www.ces.gob.ec',
+      name: 'Consejo de Educación Superior'
+    },
+    {
+      value: 'www.agrocalidad.gob.ec',
+      name: 'AGROCALIDAD'
+    },
+    {
+      value: 'www.finanzaspopulares.gob.ec',
+      name: 'Corporación Nacional de Finanzas Populares'
+    },
+    {
+      value: 'www.gob.ec/ant?page=6',
+      name: 'Agencia Nacional de Tránsito'
+    }
   ])
 
 const disabledInput = ref("---");
@@ -378,6 +394,7 @@ function onSelectedFile() {
         reader.readAsDataURL(file[0]);
         
         newPost.value.file_url =  file[0]
+        newPost.value.image_url =  file[0]
       }
     }
 

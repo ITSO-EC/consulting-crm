@@ -54,7 +54,7 @@ const useQueryPosts = () => {
             }), 
             {
               headers: {
-                'Content-type':'application/json',
+                'Content-type':'multipart/form-data',
               }
               
             })
