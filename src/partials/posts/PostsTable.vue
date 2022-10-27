@@ -172,18 +172,10 @@
               <label class="block text-sm font-medium mb-1" for="reference"
                 >Órgano Emisor</label>
               <select id="reference" class="form-select w-full" v-model="newPost.reference">
-                <option :value="'www.sri.gob.ec'">
-                  SRI
+                <option v-for="inst in institutions" :value="inst.value">
+                  {{inst.name}}
                 </option>
-                <option :value="'www.supercias.gob.ec'">
-                  Supercias
-                </option>
-                <option :value="'www.trabajo.gob.ec'">
-                  Ministerio de Trabajo
-                </option>
-                <option :value="'www.iess.gob.ec'">
-                  IESS
-                </option>
+                
               </select>
             </div>
 
@@ -268,6 +260,102 @@ const newPost = ref({
       //reference: "6309e58b6310870021f66e05",
   ro: ""
 })
+
+const institutions = ref(
+  [
+    {
+      value: 'www.sri.gob.ec',
+      name: 'SRI'
+    },
+    {
+      value: 'www.supercias.gob.ec',
+      name: 'Supercias'
+    },
+    {
+      value: 'www.trabajo.gob.ec',
+      name: 'Ministerio de Trabajo'
+    },
+    {
+      value: 'www.iess.gob.ec',
+      name: 'IESS'
+    },
+    {
+      value: 'www.aduana.gob.ec',
+      name: 'SENAE'
+    },
+    {
+      value: 'www.jprf.gob.ec',
+      name: 'JPRF'
+    },
+    {
+      value: 'www.produccion.gob.ec',
+      name: 'Ministerio de Producción, Comercio Exterior, Inversiones y Pesca'
+    },
+    {
+      value: 'www.telecomunicaciones.gob.ec',
+      name: 'Ministerio de Telecomunicaciones y de la Sociedad de la Información'
+    },
+    {
+      value: 'www.presidencia.gob.ec',
+      name: 'Presidencia de la República del Ecuador'
+    },
+    {
+      value: 'www.superbancos.gob.ec',
+      name: 'Superintendencia de Bancos'
+    },
+    {
+      value: 'www.gestionderiesgos.gob.ec',
+      name: 'Servicio Nacional de Gestión de Riesgos y Emergencias'
+    },
+    {
+      value: 'www.obraspublicas.gob.ec',
+      name: 'Ministerio de Transporte y Obras Públicas'
+    },
+    {
+      value: 'www.produccion.gob.ec/comex',
+      name: 'Comité de Comercio Exterior'
+    },
+    {
+      value: 'www.cfn.fin.ec',
+      name: 'Corporación Financiera Nacional'
+    },
+    {
+      value: 'www.asambleanacional.gob.ec/es',
+      name: 'Asamblea Nacional'
+    },
+    {
+      value: 'www.seps.gob.ec',
+      name: 'Superintendencia de Economía Popular y Solidaria'
+    },
+    {
+      value: 'www.bce.fin.ec',
+      name: 'Banco Central del Ecuador'
+    },
+    {
+      value: 'www.registrospublicos.gob.ec',
+      name: 'Dirección Nacional de Registros Públicos'
+    },
+    {
+      value: 'www.bioseguridadgalapagos.gob.ec',
+      name: 'Agencia de Bioseguridad Galápagos'
+    },
+    {
+      value: 'www.observatorioplanificacion.cepal.org/es/instituciones/gobiernos-autonomos-descentralizados-de-ecuador',
+      name: 'Gobiernos Autónomos Descentralizados'
+    },
+    {
+      value: 'www.economiasolidaria.gob.ec',
+      name: 'Instituto Nacional de Economía Popular y Solidaria'
+    },
+    {
+      value: 'www.bioseguridadgalapagos.gob.ec',
+      name: 'Agencia de Bioseguridad Galápagos'
+    },
+    {
+      value: 'www.bioseguridadgalapagos.gob.ec',
+      name: 'Agencia de Bioseguridad Galápagos'
+    },
+  ])
 
 const disabledInput = ref("---");
 
