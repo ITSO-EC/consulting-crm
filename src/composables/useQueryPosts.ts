@@ -56,6 +56,7 @@ const useQueryPosts = () => {
               headers: {
                 'Content-type':'multipart/form-data',
               }
+              
             })
           loading.value = false;
           await initializeQueriedPosts(categoryid);
