@@ -145,18 +145,13 @@
              <div>
               <label class="block text-sm font-medium mb-1" for="type"
                 >Tipo de R.O.</label>
-              <select v-if="newPost.type_reform === 'Suplemento'" id="type" class="form-select w-full" v-model="newPost.legal_regulation">
-                <option :value="'Primero'">
-                  Primero
+              <select id="type" class="form-select w-full" v-model="newPost.legal_regulation">
+                <option v-for="rotype in rotypes" :value="rotype.value">
+                  {{rotype.name}}
                 </option>
-                <option :value="'Segundo'">
-                  Segundo
-                </option>
-                <option :value="'Tercero'">
-                  Tercero
-                </option>
+                
               </select>
-              <input v-else id="type" class="form-input w-full" type="text" v-model="disabledInput" disabled/>
+              
             </div>
 
             <!-- <div>
@@ -252,9 +247,9 @@ const newPost = ref({
   title: "",
   content: "",
   legal_regulation: "",//Comodin
-  image_url: "http",
+  
   file_url:'',
-  status:"pendiente",
+  status:"pending",
   type_reform: "Registro Oficial",
   reference: "www.sri.gob.ec",
       //reference: "6309e58b6310870021f66e05",
@@ -372,6 +367,47 @@ const institutions = ref(
       name: 'Agencia Nacional de Tránsito'
     }
   ])
+  
+const rotypes = ref([
+  {
+    value: 'Suplemento',
+    name: 'Suplemento'
+  },
+  {
+    value: 'Segundo Suplemento',
+    name: 'Segundo Suplemento'
+  },
+  {
+    value: 'Tercer Suplemento',
+    name: 'Tercer Suplemento'
+  },
+  {
+    value: 'Cuarto Suplemento',
+    name: 'Cuarto Suplemento'
+  },
+  {
+    value: 'Quinto Suplemento',
+    name: 'Quinto Suplemento'
+  },
+  {
+    value: 'Registro Oficial',
+    name: 'Registro Oficial'
+  },
+  {
+    value: 'Edición Especial',
+    name: 'Edición Especial'
+  },
+  {
+    value: 'Boletín',
+    name: 'Boletín'
+  },
+  {
+    value: 'Reforma',
+    name: 'Reforma'
+  }
+
+
+  ])
 
 const disabledInput = ref("---");
 
@@ -389,12 +425,10 @@ function onSelectedFile() {
         let reader = new FileReader();
         reader.onload = (e) => {
           selectedFile.value = e.target.result;
-         
         };
         reader.readAsDataURL(file[0]);
         
         newPost.value.file_url =  file[0]
-        newPost.value.image_url =  file[0]
       }
     }
 
@@ -415,7 +449,8 @@ function onSelectedFile() {
         title: "",
         content: "",
         legal_regulation: "",//Comodin
-        image_url: "",
+        file_url:"",
+       
         status:"pendiente",
         type_reform: "Registro Oficial",
         reference: "www.sri.gob.ec",

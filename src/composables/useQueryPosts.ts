@@ -42,28 +42,24 @@ const useQueryPosts = () => {
     }
     const createPost = async ( payload:Post ,categoryid:string) => {
         loading.value = true;
-        if(payload.type_reform != 'Suplemento') {
-          payload.legal_regulation = '---'
-        };
         
         try {  
-            await axios.post(BASE_API+'posts', {
+            await axios.post(BASE_API+'posts',{
               ...payload, 
               category: categoryid,
               type:'pending'
             }, 
             {
               headers: {
-                'Content-type':'multipart/form-data',
+                'Content-type':'multipart/form-data'
               }
-              
             })
           loading.value = false;
           await initializeQueriedPosts(categoryid);
         } catch (err) {
           loading.value = false;
           error.value = err;
-         //console.log("MIerror",err)
+          //console.log("MIerror",err)
           
         }
         

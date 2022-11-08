@@ -34,7 +34,7 @@ const useViews = () => {
 
     const createView = async( payload ) =>{
         loading.value = true;
-        console.log("imagen size",payload.image_url.size/1000)
+       
         if(payload.image_url.size/1000 > 300) {
           loading.value = false;
           error.value = 'La imagen excede el peso máximo (300kB)'
